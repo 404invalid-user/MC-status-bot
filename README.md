@@ -1,8 +1,4 @@
-# :warning: *This project is archived and im no longer working on it* :warning:
-
-<br>
-
-## MC status bot :robot: :chart_with_upwards_trend:
+# MC status bot :robot: :chart_with_upwards_trend:
 
 [![Discord Bot status](https://top.gg/api/widget/status/816747912888975362.svg)](https://top.gg/bot/816747912888975362)
 [![Discord Bots](https://top.gg/api/widget/servers/816747912888975362.svg) ](https://top.gg/bot/816747912888975362)
