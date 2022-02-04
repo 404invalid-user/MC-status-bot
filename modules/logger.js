@@ -17,7 +17,7 @@ module.exports = {
             }, {
                 useFindAndModify: false,
                 new: true
-            }).cache().catch((err) => logger.error(err))
+            }).cache().catch((err) => logger.error(err.stack || err))
         }
 
         // Log the status
@@ -61,6 +61,6 @@ module.exports = {
             dbdata, {
                 useFindAndModify: false,
                 new: true
-            }).cache().catch((err) => logger.error(err))
+            }).cache().catch((err) => logger.error(err.stack || err))
     }
 }
