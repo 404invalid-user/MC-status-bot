@@ -9,42 +9,45 @@ require('../modules/cache.js')
 const logger = require('../modules/nodeLogger.js')
 
 module.exports = {
-    async execute(client) {
-        // Array of guild ids that the bot is in
-        const guilds = client.guilds.cache.map((guild) => guild.id)
+  async execute(client) {
+    // Array of guild ids that the bot is in
+    const guilds = client.guilds.cache.map((guild) => guild.id)
 
-        const docs = await geetallCache('Server')
-            // Array of guild ids that are in the database
-        const database = docs.map((docs) => docs._id)
+    const docs = await geetallCache('Server')
+    // Array of guild ids that are in the database
+    const database = docs.map((docs) => docs._id)
 
-        let a = 0
-        let l = 0
-        for (const guild of guilds) {
-            if (!database.includes(guild)) {
-                a++
-                await Server.create({ _id: guild })
-                Server.findOne({ _id: guild })
-                    .cache()
-                    .catch((err) => logger.error(err.stack || err))
-                logger.info(`guildscan added: ${guild}`)
-            }
-        }
-
-        for (const entry of database) {
-            if (!guilds.includes(entry)) {
-                l++
-
-                Server.findOneAndRemove({
-                        _id: entry
-                    }, {
-                        useFindAndModify: false
-                    })
-                    .cache()
-                    .catch((err) => logger.error(err.stack || err))
-                logger.info(`guildscan removed: ${entry}`)
-            }
-        }
-
-        logger.success(`Ended guild scan. Added ${a} new guilds, and removed ${l} old guilds from the database`)
+    let a = 0
+    let l = 0
+    for (const guild of guilds) {
+      if (!database.includes(guild)) {
+        a++
+        await Server.create({ _id: guild })
+        Server.findOne({ _id: guild })
+          .cache()
+          .catch((err) => logger.error(err.stack || err))
+        logger.info(`guildscan added: ${guild}`)
+      }
     }
+
+    for (const entry of database) {
+      if (!guilds.includes(entry)) {
+        l++
+
+        Server.findOneAndRemove(
+          {
+            _id: entry
+          },
+          {
+            useFindAndModify: false
+          }
+        )
+          .cache()
+          .catch((err) => logger.error(err.stack || err))
+        logger.info(`guildscan removed: ${entry}`)
+      }
+    }
+
+    logger.success(`Ended guild scan. Added ${a} new guilds, and removed ${l} old guilds from the database`)
+  }
 }

@@ -102,9 +102,7 @@ mongoose.Query.prototype.cache = async function() {
         }
         return
     } else if (this.mongooseCollection.name == 'servers') {
-        var value = {...result.toObject() } // Copy server object
-        value._id = undefined // Remove the _id from the value
-        await client.hset('Server', key, JSON.stringify(value))
+        await client.hset('Server', key, JSON.stringify(result))
         return
     } else {
         logger.error(`${this.mongooseCollection.name} is not a valid collection name!`)
