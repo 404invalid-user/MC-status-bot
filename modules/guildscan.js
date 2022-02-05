@@ -25,7 +25,7 @@ module.exports = {
                 await Server.create({ _id: guild })
                 Server.findOne({ _id: guild })
                     .cache()
-                    .catch((err) => logger.error(err))
+                    .catch((err) => logger.error(err.stack || err))
                 logger.info(`guildscan added: ${guild}`)
             }
         }
@@ -40,7 +40,7 @@ module.exports = {
                         useFindAndModify: false
                     })
                     .cache()
-                    .catch((err) => logger.error(err))
+                    .catch((err) => logger.error(err.stack || err))
                 logger.info(`guildscan removed: ${entry}`)
             }
         }

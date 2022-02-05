@@ -11,8 +11,8 @@ const Server = require('./database/ServerSchema')
 const Redis = require('ioredis')
 
 // Handle and log and crashes
-process.on('uncaughtException', (error, source) => {
-    logger.crash(error + 'at' + source)
+process.on('uncaughtException', async(error, source) => {
+    await logger.crash(error.stack || error + 'at' + source)
     process.exit(1)
 })
 
@@ -23,20 +23,19 @@ client.commands = new Collection()
 logger.success('Starting the bot!')
 
 // Connect to database
-mongoose.connect(process.env.DBURL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
+mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => logger.info('Connected to database!'))
-    .catch((err) => logger.error(err))
+    .catch((err) => logger.error(err.stack || err));
 
+const redisDetails = process.env.REDIS.split(':');
 const redisclient = new Redis({
-    port: 6379,
-    host: '127.0.0.1'
-})
+    password: redisDetails.length == 3 ? redisDetails[0] : null,
+    host: redisDetails.length == 3 ? redisDetails[1] : redisDetails[0],
+    port: redisDetails.length == 3 ? redisDetails[2] : redisDetails[1],
+});
 
 // Flush redis
-redisclient.flushall('SYNC', async function(err, succeeded) {
+redisclient.flushall('', async(err, succeeded) => {
     logger.info(`Flushing Redis -  ${err ? err : succeeded}`)
 
     // Cache the entire mongo database to redis.
@@ -46,7 +45,7 @@ redisclient.flushall('SYNC', async function(err, succeeded) {
     await Log.find().then((result) => {
         result.forEach((log) => redisclient.hset('Log', log._id, JSON.stringify(log.logs)))
         logger.info('Cached logs')
-    }).catch((err) => logger.error(err))
+    }).catch((err) => logger.error(err.stack || err))
 
     await Server.find().then((result) => {
         result.forEach((server) => {
@@ -57,7 +56,7 @@ redisclient.flushall('SYNC', async function(err, succeeded) {
         // Log the client in here to prevent the bot from starting before
         // the db has been completely cached.
         client.login(process.env.TOKEN)
-    }).catch((err) => logger.error(err))
+    }).catch((err) => logger.error(err.stack || err))
 })
 
 // Make the redis client global
