@@ -7,7 +7,7 @@ const { lookup } = require('../modules/cache.js')
 
 module.exports = {
   name: 'setup',
-  async execute(message, args, client) {
+  async execute(message, args, result, client) {
     // Check if the person is admin
     if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && message.member.id != process.env.OWNERID.toString()) {
       message.channel.send('You have to be a admin to use this command!')
@@ -39,7 +39,6 @@ module.exports = {
     }
 
     // Get the ip of the server
-    const result = await lookup('Server', message.guild.id)
     const ip = result.IP.split(':')[0].toLowerCase()
 
     // check if server has a defined ip

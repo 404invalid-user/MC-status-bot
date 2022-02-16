@@ -18,6 +18,19 @@
   "resolved" "https://registry.npmjs.org/@discordjs/collection/-/collection-0.4.0.tgz"
   "version" "0.4.0"
 
+"@discordjs/rest@^0.3.0":
+  "integrity" "sha512-F9aeP3odlAlllM1ciBZLdd+adiAyBj4VaZBejj4UMj4afE2wfCkNTGvYYiRxrXUE9fN7e/BuDP2ePl0tVA2m7Q=="
+  "resolved" "https://registry.npmjs.org/@discordjs/rest/-/rest-0.3.0.tgz"
+  "version" "0.3.0"
+  dependencies:
+    "@discordjs/collection" "^0.4.0"
+    "@sapphire/async-queue" "^1.1.9"
+    "@sapphire/snowflake" "^3.0.1"
+    "discord-api-types" "^0.26.1"
+    "form-data" "^4.0.0"
+    "node-fetch" "^2.6.5"
+    "tslib" "^2.3.1"
+
 "@jpbberry/typed-emitter@^1.0.1":
   "integrity" "sha512-XTYlVkcj329NNQfo+Fcix/ZcTQHn0F+5gt2lJvI5rBeulT+tq0uzeIIk3oAlwJg7GT9u4mqG0bNLq/kqKXxf4Q=="
   "resolved" "https://registry.npmjs.org/@jpbberry/typed-emitter/-/typed-emitter-1.2.1.tgz"
@@ -42,6 +55,11 @@
   "integrity" "sha512-O5ND5Ljpef86X5oy8zXorQ754TMjWALcPSAgPBu4+76HLtDTrNoDyzU2uGE2G4A8Wv51u0MXHzGQ0WZ4GMtpIw=="
   "resolved" "https://registry.npmjs.org/@sapphire/async-queue/-/async-queue-1.2.0.tgz"
   "version" "1.2.0"
+
+"@sapphire/snowflake@^3.0.1":
+  "integrity" "sha512-K+OiqXSx4clIaXcoaghrCV56zsm3bZZ5SBpgJkgvAKegFFdETMntHviUfypjt8xVleIuDaNyQA4APOIl3BMcxg=="
+  "resolved" "https://registry.npmjs.org/@sapphire/snowflake/-/snowflake-3.1.0.tgz"
+  "version" "3.1.0"
 
 "@sindresorhus/is@^0.14.0":
   "integrity" "sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ=="
@@ -472,7 +490,7 @@
   "resolved" "https://registry.npmjs.org/detect-libc/-/detect-libc-1.0.3.tgz"
   "version" "1.0.3"
 
-"discord-api-types@^0.26.0":
+"discord-api-types@^0.26.0", "discord-api-types@^0.26.1":
   "integrity" "sha512-T5PdMQ+Y1MEECYMV5wmyi9VEYPagEDEi4S0amgsszpWY0VB9JJ/hEvM6BgLhbdnKky4gfmZEXtEEtojN8ZKJQQ=="
   "resolved" "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.26.1.tgz"
   "version" "0.26.1"

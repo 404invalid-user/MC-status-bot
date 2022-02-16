@@ -4,7 +4,7 @@
  * while it was offline.
  */
 const Server = require('../database/ServerSchema')
-const { geetallCache } = require('../modules/cache.js')
+const { getallCache } = require('../modules/cache.js')
 require('../modules/cache.js')
 const logger = require('../modules/nodeLogger.js')
 
@@ -13,7 +13,7 @@ module.exports = {
     // Array of guild ids that the bot is in
     const guilds = client.guilds.cache.map((guild) => guild.id)
 
-    const docs = await geetallCache('Server')
+    const docs = await getallCache('Server')
     // Array of guild ids that are in the database
     const database = docs.map((docs) => docs._id)
 

@@ -5,7 +5,7 @@ const { lookup } = require('../modules/cache.js')
 
 module.exports = {
   name: 'chart',
-  async execute(message, args) {
+  async execute(message, args, data) {
     if (!args.toString()) {
       message.channel.send('Please specify what you want to chart! Use `mc!chart uptime`, `mc!chart playersonline` or `mc!chart mostactive`')
       return
@@ -13,7 +13,6 @@ module.exports = {
 
     //message.channel.sendTyping();
     // Get the ip. data.IP holds the ip
-    const data = await lookup('Server', message.guild.id)
     if (!data.Logging) {
       return message.channel.send('This server has logging set to off. please ask an admin to do `mc!log on`')
     }
@@ -30,12 +29,6 @@ module.exports = {
       yLabels = []
 
     if (args == 'playersonline') {
-      // Check if logs are empty
-      if (logs.length == 0) {
-        message.channel.send('The logs are empty right now, please wait for them to update!')
-        return
-      }
-
       // Set the options for chart.js
       var type = 'line',
         label = 'number of players',
@@ -51,11 +44,6 @@ module.exports = {
 
       var embedDescription = `There have been a maximum of ${Math.max(...yLabels)} players online at once, and a minimum of ${Math.min(...yLabels)}.`
     } else if (args == 'uptime') {
-      // Check if logs are empty
-      if (logs.length == 0) {
-        message.channel.send('The logs are empty right now, please wait for them to update!')
-        return
-      }
 
       // Set the options for chart.js
       var type = 'line',

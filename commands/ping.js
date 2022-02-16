@@ -1,23 +1,18 @@
-const util = require('minecraft-server-util')
-const Discord = require('discord.js')
-const { lookup } = require('../modules/cache.js')
-const logger = require('../modules/nodeLogger.js')
+const util = require('minecraft-server-util');
+const Discord = require('discord.js');
+const logger = require('../modules/nodeLogger.js');
 
 module.exports = {
   name: 'ping',
-  async execute(message, args) {
+  async execute(message, args, data) {
     message.channel.sendTyping()
 
     if (!args[0]) {
-      let data = await lookup('Server', message.guild.id)
-
       if (!data.IP) {
         message.channel.send('Please specify a IP address to ping!')
         return
       }
-
       if (data.Bedrock == true) var bedrock = true
-
       var ip = data.IP.split(':')[0].toLowerCase()
       var portnum = parseInt(data.IP.split(':')[1])
     } else {
@@ -33,23 +28,21 @@ module.exports = {
       var pinger = util.status(ip.split(':')[0].toLowerCase(), port ? port : 25565)
     }
 
-    pinger
-      .then((result) => {
-        if (result.version.protocol) online(result)
-        else offline(`${ip} didn't return a ping.`, ip)
-      })
-      .catch((error) => {
-        if (error.code == 'ENOTFOUND') offline(`Unable to resolve ${ip}.\nCheck if you entered the correct ip!`, ip)
-        else if (error.code == 'ECONNREFUSED') offline(`Unable to resolve ${ip}.\nCan't find a route to the host!`, ip)
-        else if (error.code == 'EHOSTUNREACH') offline(`${ip} refused to connect.\nCheck if you specified the correct port!`, ip)
-        else if (error.code == 'ECONNRESET') offline(`${ip} abruptly closed the connection.\nThere is some kind of issue on the server side!`, ip)
-        else if (error == 'Error: Timed out while retrieving server status') offline(`${ip} didn't return a ping.\nTimed out.`, ip)
-        else {
-          logger.error('A error occurred while trying to ping: ' + error.stack || error)
-          offline(`${ip} refused to connect.`, ip)
-        }
-        return
-      })
+    pinger.then((result) => {
+      if (result.version.protocol) online(result)
+      else offline(`${ip} didn't return a ping.`, ip)
+    }).catch((error) => {
+      if (error.code == 'ENOTFOUND') offline(`Unable to resolve ${ip}.\nCheck if you entered the correct ip!`, ip)
+      else if (error.code == 'ECONNREFUSED') offline(`Unable to resolve ${ip}.\nCan't find a route to the host!`, ip)
+      else if (error.code == 'EHOSTUNREACH') offline(`${ip} refused to connect.\nCheck if you specified the correct port!`, ip)
+      else if (error.code == 'ECONNRESET') offline(`${ip} abruptly closed the connection.\nThere is some kind of issue on the server side!`, ip)
+      else if (error == 'Error: Timed out while retrieving server status') offline(`${ip} didn't return a ping.\nTimed out.`, ip)
+      else {
+        logger.error('A error occurred while trying to ping: ' + error.stack || error)
+        offline(`${ip} refused to connect.`, ip)
+      }
+      return;
+    })
 
     // Server is online
     function online(result) {
@@ -70,24 +63,21 @@ module.exports = {
         embed.addField('Players connected:', '`' + playernames.toString().replace(/,/g, ', ') + '`', false)
       }
 
-      embed
-        .addFields(
-          {
-            name: 'Players: ',
-            value: 'Online: ' + '`' + result.players.online + '`' + '\nMax: ' + '`' + result.players.max + '`',
-            inline: true
-          },
-          {
-            name: 'Version: ',
-            value: '`' + result.version.name + '`',
-            inline: true
-          }
-        )
-        .setThumbnail('attachment://icon.png')
+      embed.addFields(
+        {
+          name: 'Players: ',
+          value: 'Online: ' + '`' + result.players.online + '`' + '\nMax: ' + '`' + result.players.max + '`',
+          inline: true
+        },
+        {
+          name: 'Version: ',
+          value: '`' + result.version.name + '`',
+          inline: true
+        }
+      ).setThumbnail('attachment://icon.png')
 
-      message.channel.send({ embeds: [embed], files: [attachment] })
+      return message.channel.send({ embeds: [embed], files: [attachment] })
 
-      return
     }
 
     // Server is offline or error

@@ -14,7 +14,7 @@
 	"pre-commit": "format",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/cappig/MC-server-status-bot.git"
+		"url": "git+https://github.com/404invalid-user/MC-server-status-bot.git"
 	},
 	"keywords": [
 		"discord",
@@ -24,10 +24,11 @@
 	"author": "Cappig",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/cappig/MC-server-status-bot/issues"
+		"url": "https://github.com/404invalid-user/MC-server-status-bot/issues"
 	},
-	"homepage": "https://github.com/cappig/MC-server-status-bot#readme",
+	"homepage": "https://github.com/404invalid-user/MC-server-status-bot#readme",
 	"dependencies": {
+		"@discordjs/rest": "^0.3.0",
 		"axios": "^0.25.0",
 		"chalk": "4.1.2",
 		"chart.js": "^3.7.0",

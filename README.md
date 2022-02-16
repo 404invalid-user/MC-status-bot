@@ -52,6 +52,18 @@ By putting the word 'bedrock' or just the letter 'b' the bot will ping this ip u
 
 <br>
 
+## f&Q
+
+- **slash commands arent working**
+ - have you got permission to use them? ask the server admin
+ - has the bot got permission to add them? kick then readd the bot with this [invite link](https://discord.com/oauth2/authorize?client_id=816747912888975362&scope=bot&permissions=268749904)
+
+- **my status channel(s) aren't updating**
+ - if your members channel is not updating this is disabled by default please resetup the bot bu doing `/setup` and make sure you select `yes` on the `show-members` option
+ - if they both arent updating due to [this see message link](https://discord.com/channels/892122095235006485/892124170115239937/939299623447719989) channels are only set to upate if they have changed and when  someone sends a message in the server so if your server is inactive the channels will not update unless you send a message
+
+<br>
+
 ## :information_source: *Notes and additional info*
 * Logging is turned off by default! You can turn it on by using the `mc!log` command.
 * The bot logs the status of the server every 5 minutes and it keeps 24 hours of logs. 
@@ -61,12 +73,14 @@ By putting the word 'bedrock' or just the letter 'b' the bot will ping this ip u
 <br>
 
 ## *Maintainers*
+
 This project is currently maintained by:
 * [@404invalid-user](https://github.com/404invalid-user)
+retired/inactive:
 * [@Cappig](https://github.com/cappig)
 
 <br>
 <hr>
 
-* Read the privacy policy [here.](https://github.com/cappig/MC-status-bot/blob/main/miscellaneous/Privacy_policy.md)
-* The profile picture for this bot is based on the computer from the [ComputerCraft mod](https://www.computercraft.info/). The original picture can be found [here](https://feed-the-beast.fandom.com/wiki/ComputerCraft?file=Iso_Computer.png). The original image is licensed under the Creative Commons Attribution-Share Alike License, thus the [modified image](https://github.com/cappig/MC-status-bot/blob/main/miscellaneous/icon.png) is licensed under the same [license](https://creativecommons.org/licenses/by-sa/3.0/).
+* Read the privacy policy [here.](https://github.com/404invalid-user/MC-status-bot/blob/main/miscellaneous/Privacy_policy.md)
+* The profile picture for this bot is based on the computer from the [ComputerCraft mod](https://www.computercraft.info/). The original picture can be found [here](https://feed-the-beast.fandom.com/wiki/ComputerCraft?file=Iso_Computer.png). The original image is licensed under the Creative Commons Attribution-Share Alike License, thus the [modified image](https://github.com/404invalid-user/MC-status-bot/blob/main/miscellaneous/icon.png) is licensed under the same [license](https://creativecommons.org/licenses/by-sa/3.0/).

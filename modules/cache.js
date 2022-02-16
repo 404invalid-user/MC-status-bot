@@ -16,17 +16,16 @@ const exec = mongoose.Query.prototype.exec
 module.exports = {
     async lookup(collection, key) {
         // collection can be 'Server' or 'Log'
-        const cacheValue = await client.hget(collection, key)
+        const cacheValue = await client.hget(collection, key);
+        var result = null;
 
         if (cacheValue) {
-            const doc = JSON.parse(cacheValue)
-            return doc
+            result = JSON.parse(cacheValue)
         }
 
         // Mongo fallback
         else {
             logger.info(`${key} just fellback to mongo while looking for the ${collection} collection!`)
-            var result
             if (collection == 'Log') {
                 result = await Log.findById({ _id: key })
                 if (result != null) {
@@ -34,21 +33,45 @@ module.exports = {
                 }
             } else if (collection == 'Server') {
                 result = await Server.findById({ _id: key })
-                    //make doc if it does not exist in mongodb
+                //make doc if it does not exist in mongodb
                 if (result == null) {
-                    Server.create({ _id: key })
+                    Server.create({ _id: key });
                 }
-                result = await Server.findById({ _id: key })
-                var value = {...result.toObject() } // Copy server object
-                value._id = undefined // Remove the _id from the value
-                client.hset(collection, key, JSON.stringify(value))
+                result = await Server.findById({ _id: key });
+                result._id = undefined // Remove the _id from the value
+                client.hset(collection, key, JSON.stringify(result))
             } else {
                 logger.error(`${collection} is not a valid collection name - Log or Server!`)
                 return
             }
 
-            return result
+            
         }
+        if (result !== null) {
+            result['save'] = async function() {
+                var mdbupdate;
+                if (collection == 'Server') {
+                    mdbupdate = await Server.findOne({ _id: key });
+                } else if (collection == 'Log') {
+                    mdbupdate = await Log.findOne({ _id: key });
+                } else {
+                   throw `${collection} is not a valid collection name!`;
+                }
+                for (const o in result) {
+                    if (result.hasOwnProperty(o)) {
+                        if (o !== 'save') {
+                        mdbupdate[o] = result[o];
+                        //console.log(`${o}: ${result[o]}`);
+                        }
+                    }
+                }
+                await mdbupdate.save();
+                await client.hdel(collection, key);
+                await client.hset(collection, key, JSON.stringify(mdbupdate));
+                return true;
+            }
+        }
+        return result;
     },
 
     // Create a Redis cache document
@@ -71,7 +94,7 @@ module.exports = {
 
     // Get all values and kays from collection
     // This returns the same array that mongo does.
-    async geetallCache(collection) {
+    async getallCache(collection) {
         const all = await client.hgetall(collection)
 
         const map = new Map(Object.entries(all)) // Convert to map
@@ -88,7 +111,7 @@ module.exports = {
 
 // Insert element in redis after ith as already been sent to mongo
 // For this to work the new option needs to be set to true
-mongoose.Query.prototype.cache = async function() {
+mongoose.Query.prototype.cache = async function () {
     const result = await exec.apply(this, arguments)
 
     const key = JSON.stringify(this.getQuery()).replace(/[^0-9]/g, '')

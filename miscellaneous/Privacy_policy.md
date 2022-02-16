@@ -40,4 +40,4 @@ Your privacy is very important to us. It is our policy to respect your privacy.
 
 ---
 
-*If you need any more information or help feel free to contact me at `matt@cappig.ga` or preferably DM me on Discord at `Cappig#3296`. Thanks for using the bot!*
+*If you need any more information or help feel free to contact me at `null@null.null` or preferably DM me on Discord at `!invalid-user#1234`. Thanks for using the bot!*

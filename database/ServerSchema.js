@@ -31,6 +31,34 @@ const serverSchema = new Schema(
       type: String,
       required: false
     },
+    NumberChannValue: {
+      type: String,
+      required: false
+    },
+    MemberChannEnabled: {
+      type: Boolean,
+      required: false
+    },
+    channel: {
+      status: {
+        type: String,
+        required: false
+      },
+      members: {
+        type: String,
+        required: false
+      }
+    },
+    pinger: {
+      status: {
+        type: String,
+        required: false
+      },
+      members: {
+        type: String,
+        required: false
+      }
+    },
     CategoryId: {
       type: String,
       required: false
