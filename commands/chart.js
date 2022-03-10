@@ -44,7 +44,6 @@ module.exports = {
 
       var embedDescription = `There have been a maximum of ${Math.max(...yLabels)} players online at once, and a minimum of ${Math.min(...yLabels)}.`
     } else if (args == 'uptime') {
-
       // Set the options for chart.js
       var type = 'line',
         label = 'uptime',

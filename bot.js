@@ -1,27 +1,27 @@
-const { Client, Intents, Collection } = require('discord.js');
-const { RateLimiter } = require('discord.js-rate-limiter');
-const fs = require('fs');
-const mongoose = require('mongoose');
-require('dotenv').config();
+const { Client, Intents, Collection } = require('discord.js')
+const { RateLimiter } = require('discord.js-rate-limiter')
+const fs = require('fs')
+const mongoose = require('mongoose')
+require('dotenv').config()
 
-const logger = require('./modules/nodeLogger.js');
+const logger = require('./modules/nodeLogger.js')
 
-const Log = require('./database/logSchema');
-const Server = require('./database/ServerSchema');
-const Redis = require('ioredis');
+const Log = require('./database/logSchema')
+const Server = require('./database/ServerSchema')
+const Redis = require('ioredis')
 
 // Handle and log and crashes
 process.on('uncaughtException', async (error, source) => {
-  await logger.crash(error.stack || error + 'at' + source);
+  await logger.crash(error.stack || error + 'at' + source)
   //process.exit(1)
 })
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
 client.rateLimiter = new RateLimiter(1, 2000) // Rate limit to one message every two seconds;
-client.commands = new Collection();
-client.slashCommands = new Collection();
+client.commands = new Collection()
+client.slashCommands = new Collection()
 
-logger.success('Starting the bot!');
+logger.success('Starting the bot!')
 
 // Connect to database
 mongoose
@@ -37,7 +37,7 @@ const redisclient = new Redis({
 })
 
 // Flush redis
-redisclient.flushall(async(err, succeeded) => {
+redisclient.flushall(async (err, succeeded) => {
   logger.info(`Flushing Redis -  ${err ? err : succeeded}`)
 
   // Cache the entire mongo database to redis.

@@ -1,4 +1,3 @@
-
 <script>
 // @ is an alias to /src
 
@@ -6,14 +5,14 @@ export default {
   name: 'ServerProfile',
   methods: {
     deleteData() {
-        if(confirm("are you sure?")) {
-            window.location.href = "/api/me/delete-account";
-        }
+      if (confirm('are you sure?')) {
+        window.location.href = '/api/me/delete-account'
+      }
     }
   },
   props: {
     me: Object,
-        translate: Function
+    translate: Function
   }
 }
 </script>
@@ -125,15 +124,34 @@ p {
   background-color: #bbbbbb;
 }
 .button-server.delete:hover {
-    background-color: red;
-    box-shadow: none;
+  background-color: red;
+  box-shadow: none;
 }
 </style>
 <template>
   <div class="bruh">
-      <p>{{translate("mc status only stores the data that is necessary for the bot and website to function you can request your data by clicking the \"Request Data\" button and you can delete your account by clicking the \"Delete Account\" button this will delete all your account preferences such as the theme language and other things.")}}</p>
-      <a class="button-server" href="/api/request-data"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#424242"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg> {{translate("Request Data")}}</a>
-      <a class="button-server delete" @click="deleteData">
-<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#424242"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M14.12 10.47L12 12.59l-2.13-2.12-1.41 1.41L10.59 14l-2.12 2.12 1.41 1.41L12 15.41l2.12 2.12 1.41-1.41L13.41 14l2.12-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"/></svg> {{translate("Delete Account")}}</a>
+    <p>
+      {{
+        translate(
+          'mc status only stores the data that is necessary for the bot and website to function you can request your data by clicking the "Request Data" button and you can delete your account by clicking the "Delete Account" button this will delete all your account preferences such as the theme language and other things.'
+        )
+      }}
+    </p>
+    <a class="button-server" href="/api/request-data"
+      ><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#424242">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
+      </svg>
+      {{ translate('Request Data') }}</a
+    >
+    <a class="button-server delete" @click="deleteData">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#424242">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          d="M14.12 10.47L12 12.59l-2.13-2.12-1.41 1.41L10.59 14l-2.12 2.12 1.41 1.41L12 15.41l2.12 2.12 1.41-1.41L13.41 14l2.12-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"
+        />
+      </svg>
+      {{ translate('Delete Account') }}</a
+    >
   </div>
 </template>

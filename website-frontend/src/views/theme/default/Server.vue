@@ -1,4 +1,3 @@
-
 <script>
 // @ is an alias to /src
 import axios from 'axios'
@@ -22,56 +21,61 @@ export default {
     ServerCustomize,
     ServerChannels
   },
-    props: {
+  props: {
     me: Object,
     server: Object,
     language: Object,
-    message:Object
+    message: Object
   },
   data() {
     return {
-      selected: 'overview',
+      selected: 'overview'
     }
   },
   methods: {
     translate(text) {
-      
       if (this.me.lan == 'en') return text
       return language[text]
     },
-      sendMessage(t) {
-        this.message.content = t
-        this.message.error = false
-        this.message.show = true
-        setTimeout(() => {
-          this.message.show = false
-        }, 5000)
-      },
-      sendErrorMessage(t) {
-        this.message.content = t
-        this.message.error = true
-        this.message.show = true
-        setTimeout(() => {
-          this.message.show = false
-        }, 5000)
+    sendMessage(t) {
+      this.message.content = t
+      this.message.error = false
+      this.message.show = true
+      setTimeout(() => {
+        this.message.show = false
+      }, 5000)
+    },
+    sendErrorMessage(t) {
+      this.message.content = t
+      this.message.error = true
+      this.message.show = true
+      setTimeout(() => {
+        this.message.show = false
+      }, 5000)
     },
     save() {
-      axios.post('/api/server', { data: this.server }).then((r) => {
-        this.sendMessage("server saved");
-      }).catch(e => {
-        this.sendErrorMessage("there was an error saving the server");
-        console.log("[/api/server]: " + e.stack || e);
-      })
+      axios
+        .post('/api/server', { data: this.server })
+        .then((r) => {
+          this.sendMessage('server saved')
+        })
+        .catch((e) => {
+          this.sendErrorMessage('there was an error saving the server')
+          console.log('[/api/server]: ' + e.stack || e)
+        })
     },
     saveProfile() {
-       axios.post('/api/me', { data: this.server }).then((r) => {
-        this.sendMessage("Profile saved");
-      }).catch(e => {
-        this.sendErrorMessage("there was an error saving your profile");
-        console.log("[/api/server]: " + e.stack || e);
-      })
+      axios
+        .post('/api/me', { data: this.server })
+        .then((r) => {
+          this.sendMessage('Profile saved')
+        })
+        .catch((e) => {
+          this.sendErrorMessage('there was an error saving your profile')
+          console.log('[/api/server]: ' + e.stack || e)
+        })
     }
-  },
+  }
 }
 </script>
 
@@ -276,7 +280,7 @@ p {
 </style>
 <template>
   <body>
-    <Message v-if="message.show" :message="message" :translate="translate"/>
+    <Message v-if="message.show" :message="message" :translate="translate" />
     <div :class="[me.options.darkMode ? 'dark' : '', 'home']">
       <div class="wrap-wrap">
         <div class="display-wrap">
@@ -338,7 +342,7 @@ p {
                 {{ translate('Channels') }}</a
               >
             </div>
-            <UserProfile v-if="selected == 'profile'" :me="me" :translate="translate" class="view" @save-profile="saveProfile"/>
+            <UserProfile v-if="selected == 'profile'" :me="me" :translate="translate" class="view" @save-profile="saveProfile" />
             <UserData v-else-if="selected == 'manage-data'" :me="me" :translate="translate" class="view" />
             <ServerOverview v-else-if="selected == 'overview'" :me="me" :server="server" :translate="translate" class="view" @save="save" />
             <ServerCharts v-else-if="selected == 'charts'" :me="me" :server="server" :translate="translate" class="view" />

@@ -1,4 +1,3 @@
-
 <script>
 // @ is an alias to /src
 
@@ -62,7 +61,7 @@ export default {
     translate: Function
   },
   async beforeMount() {
-console.log(this.server.config.chart.embed)
+    console.log(this.server.config.chart.embed)
     this.colours = {
       embed: this.rgbToHex(this.server.config.chart.embed.uptime.color),
       text: {
@@ -75,7 +74,6 @@ console.log(this.server.config.chart.embed)
         border: this.rgbToHex(this.server.config.chart.graph.line.border)
       }
     }
-
   }
 }
 </script>

@@ -1,4 +1,3 @@
-
 <script>
 import axios from 'axios'
 // @ is an alias to /src
@@ -69,21 +68,18 @@ export default {
       .catch((err) => {
         console.log('[/api/server]: ' + err.stack || err)
         if (err.toString() == 'Error: Request failed with status code 403') {
-       
           this.message.content = 'You do not have access to this server'
           this.message.error = true
           this.message.show = true
         } else if (err.toString() == 'Error: Request failed with status code 404') {
- this.message.content = '404: This server does not exist'
+          this.message.content = '404: This server does not exist'
           this.message.error = true
           this.message.show = true
-        }else  if (err.toString() == 'Error: Request failed with status code 500') {
-      
+        } else if (err.toString() == 'Error: Request failed with status code 500') {
           this.message.content = 'Unknow error please report this'
           this.message.error = true
           this.message.show = true
         }
-        
       })
     //ready the page and stop showing load icon
     this.ready = true
@@ -91,7 +87,6 @@ export default {
 }
 </script>
 <template>
-
   <Loading v-if="!ready" />
   <DefaultThemeServer v-else-if="ready && me.options.theme == 'default'" :me="me" :server="server" :bot="bot" :message="message" />
 </template>

@@ -1,4 +1,3 @@
-
 <script>
 import axios from 'axios'
 // @ is an alias to /src
@@ -18,13 +17,12 @@ export default {
           flag: '🇬🇧'
         }
       ],
-      language: {e: 'e'},
+      language: { e: 'e' },
       serverip: ''
     }
   },
   methods: {
     translate(text) {
-      
       if (this.me.lan == 'en') return text
       return language[text]
     },
@@ -32,7 +30,7 @@ export default {
       axios
         .get('/api/languages')
         .then((response) => {
-          this.languages = response.data.lans;
+          this.languages = response.data.lans
         })
         .catch((err) => {
           console.log('[/api/languages]: ' + err.stack || err)
@@ -59,7 +57,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 #lan-menu {
@@ -158,7 +155,7 @@ input {
   position: absolute;
   z-index: 1;
   right: 0;
-top: 34vh;
+  top: 34vh;
   border-radius: 6px;
   padding: 1.5px 5px;
   display: flex;

@@ -1,28 +1,28 @@
-const { ShardingManager } = require("discord.js");
-const mongoose = require('mongoose');
+const { ShardingManager } = require('discord.js')
+const mongoose = require('mongoose')
 const express = require('express')
 const { AutoPoster } = require('topgg-autoposter')
-require('dotenv').config();
-const LogSchema = require('./database/logSchema');
-const ServerSchema = require('./database/ServerSchema');
-const Redis = require('ioredis');
-const logger = require('./modules/nodeLogger.js');
-const webserver = express();
+require('dotenv').config()
+const LogSchema = require('./database/logSchema')
+const ServerSchema = require('./database/ServerSchema')
+const Redis = require('ioredis')
+const logger = require('./modules/nodeLogger.js')
+const webserver = express()
 const fs = require('fs')
 webserver.use((req, res, next) => {
-  req.date = Date.now();
-  next();
-});
+  req.date = Date.now()
+  next()
+})
 process.on('uncaughtException', async (error, source) => {
-  await logger.crash(error.stack || error + 'at' + source);
+  await logger.crash(error.stack || error + 'at' + source)
   //process.exit(1)
 })
-const webServerSetup = require('./website/index');
+const webServerSetup = require('./website/index')
 
-const shards = new ShardingManager("./bot.js", {
+const shards = new ShardingManager('./bot.js', {
   token: process.env.TOKEN,
-  totalShards: "auto"
-});
+  totalShards: 'auto'
+})
 
 // Connect to database
 mongoose
@@ -37,7 +37,7 @@ const redisclient = new Redis({
   port: redisDetails.length == 3 ? redisDetails[2] : redisDetails[1]
 })
 
-global.redisclient = redisclient;
+global.redisclient = redisclient
 
 // Flush redis
 redisclient.flushall(async (err, succeeded) => {
@@ -60,34 +60,31 @@ redisclient.flushall(async (err, succeeded) => {
         redisclient.hset('Server', server._id, JSON.stringify(server))
       })
       logger.info('Cached servers')
-    }).catch((err) => logger.error(err.stack || err));
+    })
+    .catch((err) => logger.error(err.stack || err))
 
-
-
-  const lanFiles = fs.readdirSync(`${__dirname}/languages/`).filter((file) => file.endsWith(".json"));
+  const lanFiles = fs.readdirSync(`${__dirname}/languages/`).filter((file) => file.endsWith('.json'))
   for (let fileName of lanFiles) {
-    let file = require(`${__dirname}/languages/${fileName}`);
-    redisclient.hset('lan', file.iso, JSON.stringify(file));
+    let file = require(`${__dirname}/languages/${fileName}`)
+    redisclient.hset('lan', file.iso, JSON.stringify(file))
   }
+})
 
-});
-
-
-shards.on("shardCreate", shard => {
-  logger.info(`Launched shard #${shard.id}`);
-});
+shards.on('shardCreate', (shard) => {
+  logger.info(`Launched shard #${shard.id}`)
+})
 
 // Post stats to top.gg
 if (process.env.TOPGGAPI) {
   AutoPoster(process.env.TOPGGAPI, shards).on('posted', () => {
     logger.info('Posted stats to Top.gg!')
-  });
+  })
 } else logger.info("No topgg token was provided - stats won't be posted to top.gg!")
 
-shards.spawn(shards.totalShards, 10000);
+shards.spawn(shards.totalShards, 10000)
 
-webServerSetup(webserver, redisclient, shards);
+webServerSetup(webserver, redisclient, shards)
 
 webserver.listen(process.env.PORT, () => {
-  logger.success("web server listening on port " + process.env.PORT);
+  logger.success('web server listening on port ' + process.env.PORT)
 })

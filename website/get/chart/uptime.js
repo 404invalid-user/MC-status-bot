@@ -1,9 +1,9 @@
-const path = require('path');
+const path = require('path')
 module.exports = {
-    path: '/chart',
-    dynamic: false,
-    run(shards, req,res) {
-        res.state(200).send(`
+  path: '/chart',
+  dynamic: false,
+  run(shards, req, res) {
+    res.state(200).send(`
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -22,9 +22,7 @@ module.exports = {
         </body>
         </html>
         `)
-    }
+  }
 }
 
-//TODO: make generate chart then redirect to /chart/YYYY/MM/DD/HH/name.png 
-
-
+//TODO: make generate chart then redirect to /chart/YYYY/MM/DD/HH/name.png

@@ -1,12 +1,9 @@
-
 <script>
 import axios from 'axios'
 
 export default {
   name: 'UserProfile',
-  methods: {
-  
-  },
+  methods: {},
   data() {
     return {
       languages: {}
@@ -17,20 +14,21 @@ export default {
     translate: Function
   },
   async beforeMount() {
-    axios.get('/api/languages')
-        .then((response) => {
-          this.languages = response.data.lans;
-        })
-        .catch((err) => {
-          console.log('[/api/languages]: ' + err.stack || err)
-        })
-
+    axios
+      .get('/api/languages')
+      .then((response) => {
+        this.languages = response.data.lans
+      })
+      .catch((err) => {
+        console.log('[/api/languages]: ' + err.stack || err)
+      })
   }
 }
 </script>
 
 <style scoped>
-input[type='text'],select {
+input[type='text'],
+select {
   height: 38px;
   border: 2px solid black;
   width: 80%;
@@ -145,15 +143,22 @@ p {
     <p>{{ translate('Theme') }}:</p>
     <input type="text" v-model="this.me.options.theme" />
     <p>{{ translate('Language') }}:</p>
-     <select v-model="me.lan">
-      <option v-for="lan of languages" :key="lan.iso" :value="lan.iso">{{lan.flag}} - {{lan.iso}}</option>
+    <select v-model="me.lan">
+      <option v-for="lan of languages" :key="lan.iso" :value="lan.iso">{{ lan.flag }} - {{ lan.iso }}</option>
     </select>
     <p>{{ translate('Admin') }}:</p>
     <label class="switch">
-      <input type="checkbox" v-model="me.admin" disabled/>
+      <input type="checkbox" v-model="me.admin" disabled />
       <span class="slider"></span>
     </label>
     <a class="button-server" @click="$emit('save-profile')">
-<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#424242"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"/></svg> save</a>
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#424242">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm2 16H5V5h11.17L19 7.83V19zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM6 6h9v4H6z"
+        />
+      </svg>
+      save</a
+    >
   </div>
 </template>

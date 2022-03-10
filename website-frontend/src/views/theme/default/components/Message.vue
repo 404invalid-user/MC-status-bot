@@ -1,11 +1,9 @@
-
 <script>
 // @ is an alias to /src
 
 export default {
   name: 'Message',
-  methods: {
-  },
+  methods: {},
   props: {
     message: Object,
     language: Object,
@@ -38,9 +36,9 @@ export default {
 }
 </style>
 <template>
-    <div class="message-wrap">
-      <div :class="[message.error ? 'error' : 'ok', 'message']">
-        {{ translate(message.content) }}
-      </div>
+  <div class="message-wrap">
+    <div :class="[message.error ? 'error' : 'ok', 'message']">
+      {{ translate(message.content) }}
     </div>
+  </div>
 </template>

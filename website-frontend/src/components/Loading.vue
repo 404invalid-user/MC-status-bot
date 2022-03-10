@@ -1,18 +1,14 @@
-
 <script>
 export default {
   name: 'Loading',
-  components: {
-  },
+  components: {}
 }
 </script>
 
-
-<style scoped>
-</style>
+<style scoped></style>
 
 <template>
-<div>
+  <div>
     <p>loading...</p>
-</div>
+  </div>
 </template>

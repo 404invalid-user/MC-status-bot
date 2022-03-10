@@ -1,4 +1,3 @@
-
 <script>
 import axios from 'axios'
 // @ is an alias to /src
@@ -12,7 +11,7 @@ export default {
   data() {
     return {
       selected: {},
-      hasSelected: false,
+      hasSelected: false
     }
   },
   props: {
@@ -49,11 +48,10 @@ export default {
     }
   },
   beforeMount() {
-     console.log(this.me)
+    console.log(this.me)
   }
 }
 </script>
-
 
 <style scoped>
 .wrap {
@@ -219,7 +217,7 @@ img.ping {
           @mouseover="hover(server._id)"
           @mouseleave="remHover(server._id)"
         >
-          <div class="image" :style="{ backgroundImage: `url(${server.icon && server.icon !== null && server.icon != undefined ? server.icon :'/down.png'})` }">
+          <div class="image" :style="{ backgroundImage: `url(${server.icon && server.icon !== null && server.icon != undefined ? server.icon : '/down.png'})` }">
             <div class="hover"></div>
           </div>
           <div class="text">

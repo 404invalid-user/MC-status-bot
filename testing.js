@@ -1,15 +1,17 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer')
 const fs = require('fs')
 const Discord = require('discord.js')
 
 module.exports = async (message, args) => {
-    message.channel.send("please wait")
-    console.log(args)
-    let x = args[0], y = '3', z = args[1];
-    let bluemapurl = 'http://snekmc.schost.us:8100/';
-  const browser = await puppeteer.launch({ headless: false });
+  message.channel.send('please wait')
+  console.log(args)
+  let x = args[0],
+    y = '3',
+    z = args[1]
+  let bluemapurl = 'http://snekmc.schost.us:8100/'
+  const browser = await puppeteer.launch({ headless: false })
   //http://snekmc.schost.us:8100/#world:-32:2:-32:100:0:0.89:0:0:perspective
-  const page = await browser.newPage();
+  const page = await browser.newPage()
   const world = 'world'
   const x = '-32'
   const y = '2'
@@ -20,17 +22,15 @@ module.exports = async (message, args) => {
   const tilt = '0'
   const ortho = '0'
   const mode = 'perspective'
-  await page.setDefaultNavigationTimeout(0); 
-  await page.goto(`${bluemapurl}#${world}:${x}:${y}:${z}:${distance}:${rotation}:${angle}:${tilt}:${ortho}:${mode}`);
+  await page.setDefaultNavigationTimeout(0)
+  await page.goto(`${bluemapurl}#${world}:${x}:${y}:${z}:${distance}:${rotation}:${angle}:${tilt}:${ortho}:${mode}`)
   //await page.goto(`${bluemapurl}#world:${z}:${y}:${z}:0:-0.02:0:0:0:free`);
-  
-  setTimeout(async ()=> {
 
-    await page.screenshot({ path: 'example.png' });
+  setTimeout(async () => {
+    await page.screenshot({ path: 'example.png' })
 
-    await browser.close();
-    const attachment = new Discord.MessageAttachment('./example.png');
-    message.reply({ content: "map", files: [attachment] });
+    await browser.close()
+    const attachment = new Discord.MessageAttachment('./example.png')
+    message.reply({ content: 'map', files: [attachment] })
   }, 20000)
-
-};
+}

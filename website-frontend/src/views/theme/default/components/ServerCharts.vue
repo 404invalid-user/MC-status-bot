@@ -1,15 +1,12 @@
-
 <script>
 // @ is an alias to /src
 
 export default {
   name: 'ServerProfile',
-  methods: {
-
-  },
+  methods: {},
   props: {
     me: Object,
-      translate: Function,
+    translate: Function,
     server: Object
   }
 }
@@ -18,14 +15,14 @@ export default {
 <style scoped>
 .bruh {
   display: flex;
-    flex-direction: column;
+  flex-direction: column;
   padding: 5px;
 }
 .chart {
   width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
 }
 
 p {
@@ -66,7 +63,7 @@ p {
     <img id="uptime" class="chart" alt="chart uptime" :src="'/chart/uptime.png?id=' + server._id" />
     <p>{{ translate('Players Online') }}:</p>
     <img id="playersonline" class="chart" alt="chart playersonline" :src="'/chart/playersonline.png?id=' + server._id" />
-      <p>{{ translate('Most Active') }}:</p>
+    <p>{{ translate('Most Active') }}:</p>
     <img id="mostactive" class="chart" alt="chart mostactive" :src="'/chart/mostactive.png?id=' + server._id" />
   </div>
   <div v-else class="bruh">

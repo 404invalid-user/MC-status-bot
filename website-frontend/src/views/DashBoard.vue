@@ -35,18 +35,17 @@ export default {
   },
   methods: {
     translate(text) {
-      
       if (this.me.lan == 'en') return text
       return language[text]
     },
     getStatus(data, status) {
-      const dataStr = data.toString();
-      if(dataStr.startsWith("Error:")) {
+      const dataStr = data.toString()
+      if (dataStr.startsWith('Error:')) {
         if (dataStr.endsWith(status.toString())) {
-          return true;
+          return true
         }
       }
-      return false;
+      return false
     }
   },
   beforeMount() {
@@ -54,7 +53,7 @@ export default {
     axios
       .get('/api/me')
       .then((response) => {
-        this.me = response.data.me;
+        this.me = response.data.me
         if (this.me.lan !== 'en') {
           //get users language
           axios
@@ -73,10 +72,10 @@ export default {
         this.ready = true
       })
       .catch((e) => {
-        console.log("[/api/me]: " + e.stack || e);
+        console.log('[/api/me]: ' + e.stack || e)
         console.log(e.toString())
-        if(this.getStatus(e, 401)) {
-          return window.location.href = '/login';
+        if (this.getStatus(e, 401)) {
+          return (window.location.href = '/login')
         }
         this.message.content = 'Could not fetch your data try refreshing'
         this.message.error = true
@@ -88,7 +87,15 @@ export default {
 
 <template>
   <body>
-    <Message v-if="message.show" :message="message" :translate="(d) => {return d}"/>
+    <Message
+      v-if="message.show"
+      :message="message"
+      :translate="
+        (d) => {
+          return d
+        }
+      "
+    />
     <Loading v-if="!ready" />
     <DefaultThemeDashboard v-else-if="ready && me.options.theme == 'default'" :bot="bot" :me="me" :translate="translate" />
   </body>
