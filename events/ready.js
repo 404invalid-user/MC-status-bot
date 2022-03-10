@@ -14,9 +14,9 @@ module.exports = {
     console.log("Ready!");
 
     // Update activity every hour so that it doesn't expire
-    client.user.setActivity('for mc!help | hosted by snakecraft hosting', { type: 'WATCHING' });
+    client.user.setActivity('for /help | hosted by http://schost.us', { type: 'WATCHING' });
     setInterval(() => {
-      client.user.setActivity('for mc!help | hosted by snakecraft hosting', { type: 'WATCHING' });
+      client.user.setActivity('for /help | hosted by http://schost.us', { type: 'WATCHING' });
     }, 3600000)
 
     // Scan for guilds not in the db, the ones that were added when the bot was offline

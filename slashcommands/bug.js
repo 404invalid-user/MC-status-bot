@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const translate = require('../modules/translate');
 
 module.exports = {
     name: 'bug',
@@ -14,9 +15,6 @@ module.exports = {
         const owner = client.users.cache.get(process.env.OWNERID);
         let bug = interaction.options.getString('description');
         
-        if (!bug) {
-            return interaction.reply('Please specify a bug that you would like to report.');
-        }
         const embed = new Discord.MessageEmbed()
             .setTitle('New Bug report!')
             .addField('Author', interaction.member.user.toString(), true)
@@ -26,6 +24,6 @@ module.exports = {
             .setTimestamp();
         owner.send({ embeds: [embed] });
 
-        interaction.reply('Thank You for reporting a bug and helping to improve this bot! Your feedback is greatly appreciated!');
+        interaction.reply(translate(server.lan, 'To report a bug please go to our website at https://www.mcstatusbot.site/bug'));
     }
 }

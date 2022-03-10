@@ -50,6 +50,7 @@ module.exports = {
         } else {
           // server is online
           online(server._id, result.players.online)
+          server.pinger.motd = result.motd.html;
           if (server.Logging == true) {
             logger.execute(result, server)
           }

@@ -11,8 +11,8 @@ module.exports = {
         if (limited) return; // No response is sent if the user is rate limited
 
         
-        if (!interaction.isCommand()) return console.log("no commmnad");
-        if (interaction.channel.type == 'GUILD_DM') return console.log("is dm");
+        if (!interaction.isCommand()) return;
+        if (interaction.channel.type == 'GUILD_DM') return;
         //get server
         const server = await lookup('Server', interaction.guild.id);
         //update channel status if it has changed

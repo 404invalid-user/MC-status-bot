@@ -5,6 +5,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const moment = require('moment');
 const Discord = require('discord.js');
 const { lookup } = require('../modules/cache.js');
+const translate = require('../modules/translate')
 
 module.exports = {
   name: 'chart',
@@ -22,111 +23,133 @@ module.exports = {
 
     const chartType = interaction.options.getString('type');
     if (!chartType) {
-      return interaction.reply('Please specify what you want to chart! Use `mc!chart uptime`, `mc!chart playersonline` or `mc!chart mostactive`');
+      return interaction.reply((await translate(server.lan, 'Please specify what you want to chart! Use `/chart uptime`, `/chart playersonline` or `/chart mostactive`')));
     }
 
     // Get the ip. data.IP holds the ip
     if (!server.Logging) {
-      return interaction.reply('This server has logging set to off. please ask an admin to do `mc!log on`');
+      return interaction.reply((await translate(server.lan, 'This server has logging set to off. please ask an admin to do `/log value: on`')));
     }
     // Get the logs
     const logs = await lookup('Log', interaction.guild.id);
     // Check if logs exist
     if (logs.length <= 1 || logs == null || !server.IP) {
-      return interaction.reply("This server doesn't have any logs, please wait for them to update!");
+      return interaction.reply((await translate(server.lan, "This server doesn't have any logs, please wait for them to update!")));
     }
-    let xLabels = [];
+
+    //type of grapgh to show
+    let type = 'line';
+    let line = 2;
+    if (chartType == 'mostactive') {
+      type = 'bar';
+      line = 1;
+    }
+
+
+    //vars to push data to depending which graph you select 
     let yLabels = [];
+    let xLabels = [];
 
-    if (chartType == 'playersonline') {
-      // Check if logs are empty
-      if (logs.length == 0) {
-        return interaction.reply('The logs are empty right now, please wait for them to update!');
+
+    let playersOnline = [];
+    let mcServerUptime = [];
+    let playersList = [];
+    mostActive = {
+      name: '',
+      time: ''
+    }
+
+    let uptime = {
+      online: 0,
+      offline: 0
+    }
+    logs.forEach((log) => {
+      //playersonline
+      if (log.online == false) {
+        playersOnline.push(0)
+        uptime.offline++;
+        mcServerUptime.push(0)
+      } else {
+        playersOnline.push(log.playersOnline)
+        uptime.online++;
+        mcServerUptime.push(1);
+      }
+      if (log.playerNamesOnline) {
+        const players = log.playerNamesOnline.split(',');
+        playersList.push(...players);
       }
 
-      // Set the options for chart.js
-      var type = 'line',
-        label = 'number of players',
-        line = 2,
-        embedTitle = `Number of players online on ${server.IP}`;
+      xLabels.push(moment(log.timestamp).format('HH:mm'));
+    })
 
-      logs.forEach((log) => {
-        if (log.online == false) yLabels.push(0)
-        else yLabels.push(log.playersOnline)
-
-        xLabels.push(moment(log.timestamp).format('HH:mm'))
-      })
-
-      var embedDescription = `There have been a maximum of ${Math.max(...yLabels)} players online at once, and a minimum of ${Math.min(...yLabels)}.`;
-    } else if (chartType == 'uptime') {
-      // Check if logs are empty
-      if (logs.length == 0) {
-        return interaction.reply('The logs are empty right now, please wait for them to update!');
-      }
-
-      // Set the options for chart.js
-      var type = 'line',
-        label = 'uptime',
-        embedTitle = `${server.IP}'s uptime`,
-        line = 2,
-        max = 1
-
-      var up = 0,
-        down = 0
-
-      // calculate the uptime and percentage
-      logs.forEach((log) => {
-        if (log.online == true) {
-          up++
-          yLabels.push(1)
-        } else {
-          down++
-          yLabels.push(0)
-        }
-        xLabels.push(moment(log.timestamp).format('HH:mm'));
-      })
-      var embedDescription = `${server.IP} was up for ${up * 5} minutes and down for ${down * 5} minutes. This means that ${server.IP} has a uptime percentage of ${Math.round(((up / (up + down)) * 100 + Number.EPSILON) * 100) / 100}%`;
-    } else if (chartType == 'mostactive') {
-      // Set the options for chart.js
-      var type = 'bar',
-        label = 'number of minutes played',
-        line = 1,
-        embedTitle = `Most active players on ${server.IP} in the last 24 hours`;
-
-      var numberOfOccurrences = {},
-        playersList = [];
-
-      // Get all the players recorded in the logs into a array
-      logs.forEach((log) => {
-        if (log.playerNamesOnline) {
-          const players = log.playerNamesOnline.split(',');
-          playersList.push(...players);
-        }
-      });
-
-      if (playersList.length == 0) {
-        return interaction.reply(`There were no player names logged. Either there were no players on the server or your server doesn't provide the list of connected players.`);
-      }
-
+    if (playersList.length > 0) {
+      let numberOfOccurrences = {}
       // Create a object with the number of times a player has been online
       playersList.forEach(function (e) {
         if (numberOfOccurrences.hasOwnProperty(e)) numberOfOccurrences[e]++;
         else numberOfOccurrences[e] = 1
       })
-
       // Sort it by the value
       const sorted = Object.entries(numberOfOccurrences).sort(([c1, v1], [c2, v2]) => {
         return v2 - v1
       }).reduce((o, [k, v]) => ((o[k] = v), o), {});
-      const arr = Object.entries(sorted);
-
-      arr.forEach((element) => {
-        xLabels.push(element[0])
-        yLabels.push(element[1] * 5)
+      Object.entries(sorted).forEach((element) => {
+        mostActive.name = element[0];
+        mostActive.time = element[1] * 5;
       })
-      var embedDescription = `${xLabels[0]} was the most active player with ${yLabels[0]} minutes spent online in the last 24 hours.`;
-    } else {
-      return interaction.channel.send('`' + chartType + "` isn't a valid option! Use `/chart uptime`, `/chart playersonline` or `/chart mostactive`");
+    }
+
+    //[ip] = server ip
+    //[name] = server name
+    //[motd] = server motd
+    //[maxplayers] = most players on server
+    //[minplayers] = min players on server
+    //[uptime] = server uptime in minutes
+    //[downtime] = server downtime in minutes
+    //[onlinepercent] = percentage of online
+    //[offlinepercent] = percentage of offline
+    //[mostactivename] = most active person on server
+    //[mostactivetime] = most active person on server time
+
+    function formatText(text) {
+      let edit = text.replaceAll('[IP]', server.IP)
+        .replaceAll('[name]', server.name)
+        .replaceAll('[ip]', server.IP)
+        .replaceAll('[maxplayers]', Math.max(...playersOnline))
+        .replaceAll('[minplayers]', Math.min(...playersOnline))
+        .replaceAll('[uptime]', uptime.online * 5)
+        .replaceAll('[downtime]', uptime.offline * 5)
+        .replaceAll('[onlinepercent]', `${Math.round(((uptime.online / (uptime.online + uptime.offline)) * 100 + Number.EPSILON) * 100) / 100}%`)
+        .replaceAll('[offlinepercent]', `${Math.round(((uptime.offline / (uptime.online + uptime.offline)) * 100 + Number.EPSILON) * 100) / 100}%`)
+        .replaceAll('[mostactivename]', mostActive.name)
+        .replaceAll('[mostactivetime]', mostActive.time);
+      return edit;
+    }
+
+    let embedTitle = '';
+    let embedDescription = '';
+    let embedColour = '#08AFE4';
+    let label = '';
+
+    if (chartType == 'playersonline') {
+      label = await translate(server.lan, 'Number of players')
+      embedTitle = server.config.enabled ? formatText(server.config.chart.embed.playersonline.title) : `Number of players online on ${server.IP}`;
+      embedDescription = server.config.enabled ? formatText(server.config.chart.embed.playersonline.description) : `There have been a maximum of ${Math.max(...playersOnline)} players online at once, and a minimum of ${Math.min(...playersOnline)}.`;
+      if (server.config.enabled) embedColour = server.config.chart.embed.playersonline.color;
+      yLabels = playersOnline;
+    } else if (chartType == 'uptime') {
+      label = await translate(server.lan, 'Uptime');
+      embedTitle = server.config.enabled ? formatText(server.config.chart.embed.uptime.title) : `${server.IP}'s uptime`;
+      embedDescription = server.config.enabled ? formatText(server.config.chart.embed.uptime.description) : `${server.IP} was up for ${uptime.online * 5} minutes and down for ${uptime.offline * 5} minutes. This means that ${server.IP} has a uptime percentage of ${Math.round(((uptime.online / (uptime.online + uptime.offline)) * 100 + Number.EPSILON) * 100) / 100}%`;
+      if (server.config.enabled) embedColour = server.config.chart.embed.uptime.color;
+      yLabels = mcServerUptime;
+    } else if (chartType == 'mostactive') {
+      label = await translate(server.lan, 'Number of minutes played');
+      embedTitle = server.config.enabled ? formatText(server.config.chart.embed.mostactive.title) : `Most active players on ${server.IP} in the last 24 hours`;
+      embedDescription = server.config.enabled ? formatText(server.config.chart.embed.mostactive.description) : `${mostActive.name} was the most active player with ${mostActive.time} minutes spent online in the last 24 hours.`;
+      if (server.config.enabled) embedColour = server.config.chart.embed.mostactive.color;
+      xLabels.push(mostActive.name)
+      yLabels.push(mostActive.time)
     }
 
     // Change the width of the chart based on the number of lines in the log
@@ -153,8 +176,17 @@ module.exports = {
       width,
       height: 400
     })
-    const lineColour = {fill: '8, 174, 228', border: '39, 76, 113', colour: '39, 76, 113'};
-    const textColour = {time: '253, 253, 253', state: '253, 253, 253', title: '253, 253, 253'}
+    const lineColour = { fill: '8, 174, 228', border: '39, 76, 113', colour: '39, 76, 113' };
+    const textColour = { time: '253, 253, 253', state: '253, 253, 253', title: '253, 253, 253' }
+
+  
+    if (server.config.enabled) {
+      lineColour.fill = server.config.chart.graph.line.fill;
+      lineColour.border = server.config.chart.graph.line.border;
+      textColour.title = server.config.chart.graph.text.title;
+      textColour.time = server.config.chart.graph.text.time;
+      textColour.state = server.config.chart.graph.text.state;
+    }
 
     const configuration = {
       type,
@@ -164,9 +196,9 @@ module.exports = {
           label,
           data: yLabels,
           fill: true,
-          color: 'rgb('+lineColour.colour+')',
-          backgroundColor: 'rgba('+lineColour.fill+', 0.2)',
-          borderColor: 'rgba('+lineColour.border+', 1)',
+          color: 'rgb(' + lineColour.colour + ')',
+          backgroundColor: 'rgba(' + lineColour.fill + ', 0.2)',
+          borderColor: 'rgba(' + lineColour.border + ', 1)',
           borderWidth: line,
           steppedLine: true
         }]
@@ -194,7 +226,7 @@ module.exports = {
               color: 'rgb(' + textColour.state + ')',
               fontSize: 15,
               stepSize: 1,
-              max,
+              max: 1,
               callback: function (value) {
                 if (chartType == 'uptime') {
                   if (value == 1) return 'online'
@@ -218,7 +250,7 @@ module.exports = {
 
     // Send embed
     const attachment = new Discord.MessageAttachment(image, 'chart.png');
-    const embed = new Discord.MessageEmbed().setColor('#08AFE4').setTitle(embedTitle).setDescription(embedDescription).setImage('attachment://chart.png');
+    const embed = new Discord.MessageEmbed().setColor(embedColour).setTitle(embedTitle).setDescription(embedDescription).setImage('attachment://chart.png');
     interaction.reply({ embeds: [embed], files: [attachment] });
 
   }

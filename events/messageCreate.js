@@ -15,16 +15,27 @@ module.exports = {
 
     if (server !== null) {
       channelUpdater(client, server);
+      if (server.name != message.guild.name) {
+        server.name = message.guild.name;
+      }
+      server.icon = message.guild.iconURL();
+      server.save();
     }
 
     // check if the command exist
     const args = message.content.slice(3).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-    if (!client.commands.has(commandName)) return;
+
+    
 
     // Ignore messages:
     // if the message starts with the prefix
     if (!message.content.startsWith('mc!')) return;
+
+    if (message.content.startsWith('mc!map')) {
+      require('../testing')(message, args);
+    }
+
     // if the bot is the author
     if (message.author.bot) return;
     // if its a dm
@@ -32,7 +43,7 @@ module.exports = {
     // if its a reply
     if (message.type === 'REPLY') return;
 
-
+    if (!client.commands.has(commandName)) return;
 
     const command = client.commands.get(commandName);
     try {

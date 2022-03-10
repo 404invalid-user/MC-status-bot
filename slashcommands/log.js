@@ -3,7 +3,8 @@ const Log = require('../database/logSchema');
 const { Permissions } = require('discord.js');
 require('../modules/cache.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { Interaction } = require('chart.js');
+const translate = require('../modules/translate');
+const cache = require('../modules/cache.js');
 
 
 
@@ -18,29 +19,31 @@ module.exports = {
         .setRequired(true)
         .addChoice('on', 'on')
         .addChoice('off', 'off')),
-  execute(message, server) {
+  async execute(interaction, server) {
+    let replyContent = '';
     // Check if the person is admin
-    if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-      message.reply('You have to be a admin to use this command!');
-      return;
+    if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+      replyContent = await translate(server.lan, "You have to be a admin to use this command!");
+      return interaction.reply(replyContent);
     }
-      args = message.options.getString('value');
+      args = interaction.options.getString('value');
       if (!server.IP || server.IP == '' || server.IP == ' ') {
-        return message.reply("there is no ip set use `/setup` to set an ip");
+        replyContent = await translate(server.lan, "there is no ip set use `/setup` to set an ip");
+        return interaction.reply(replyContent);
       }
 
-    if (args == 'on') var logging = true;
-    else if (args == 'off') var logging = false;
-    else {
-      return message.reply('Please specify a valid option (on/off)');
-    }
-    server.Logging = logging;
+    if (args == 'on') {
+      server.Logging = true;
+     } else if (args == 'off') {
+      server.Logging = false;
+     }
+   
     server.save();
 
     if (logging == true) {
       // Create a log document
       Log.findByIdAndUpdate({
-        _id: message.guild.id
+        _id: interaction.guild.id
       }, {
         "logs": []
       }, {
@@ -54,16 +57,22 @@ module.exports = {
             console.error(err);
           }
         })
-        .then(message.reply(`Logging has been turned on`))
+        .then(async e => {
+          replyContent = `${await translate(server.lan, "Logging has been turned")} ${await translate(server.lan, "on")}`;
+          interaction.reply(replyContent)
+        })
     } else if (logging == false) {
       Log.findOneAndRemove({
-        _id: message.guild.id
+        _id: interaction.guild.id
       }, {
         useFindAndModify: false,
         new: true
       }).cache()
         .catch((err) => console.error(err))
-        .then(message.reply(`Logging has been turned off`))
+        .then(async e => {
+          replyContent = `${await translate(server.lan, "Logging has been turned")} ${await translate(server.lan, "off")}`;
+          interaction.reply(replyContent)
+        })
     }
   }
 }

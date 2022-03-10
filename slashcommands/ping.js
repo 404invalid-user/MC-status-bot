@@ -1,6 +1,7 @@
 const util = require('minecraft-server-util');
 const Discord = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const translate = require('../modules/translate')
 module.exports = {
   name: 'ping',
   data: new SlashCommandBuilder()
@@ -22,9 +23,9 @@ module.exports = {
     let bedrock = false;
     let ip;
     let portnum;
+    await interaction.deferReply();
 
     if (!interaction.options.getString('ip')) {
-      await interaction.deferReply();
       ip = server.IP.split(':')[0].toLowerCase();
       portnum = Number(server.IP.split(':')[1]);
       bedrock = server.bedrock;
@@ -39,34 +40,44 @@ module.exports = {
     } else {
       pinger = util.status(ip, port ? port : 25565);
     }
-
-    pinger.then((result) => {
-      if (result.version.protocol) online(result);
-      else offline(`${ip} didn't return a ping.`, ip);
-    }).catch((error) => {
-      if (error.code == "ENOTFOUND") offline(`Unable to resolve ${ip}.\nCheck if you entered the correct ip!`, ip);
-      else if (error.code == "ECONNREFUSED") offline(`Unable to resolve ${ip}.\nCan't find a route to the host!`, ip);
-      else if (error.code == "EHOSTUNREACH") offline(`${ip} refused to connect.\nCheck if you specified the correct port!`, ip);
-      else if (error.code == "ECONNRESET") offline(`${ip} abruptly closed the connection.\nThere is some kind of issue on the server side!`, ip);
-      else if (error == "Error: Socket timed out while connecting") offline(`${ip} didn't return a ping.\nTimed out.`, ip);
-      else {
+    let text = '';
+    pinger.then(async (result) => {
+      if (result.version.protocol) {
+        online(result);
+      } else {
+        text = await translate(serverlan, "didn't return a ping.")
+        offline(`${ip} ${text}`, ip);
+      }
+    }).catch(async (error) => {
+      if (error.code == "ENOTFOUND") {
+        
+          offline(`${await translate(server.lan, "Unable to resolve")} ${ip}.\n${await translate(server.lan, "Check if you entered the correct ip!")}`, ip);
+      } else if (error.code == "ECONNREFUSED") {
+        offline(`${await translate(server.lan, "Unable to resolve")} ${ip}.\n${await translate(server.lan, "Can't find a route to the host!")}`, ip);
+      } else if (error.code == "EHOSTUNREACH") {
+        offline(`${ip} ${await translate(server.lan, "refused to connect.")}\n${await translate(server.lan, "Check if you specified the correct port!")}`, ip);
+      } else if (error.code == "ECONNRESET") {
+        offline(`${ip} ${await translate(server.lan, "abruptly closed the connection.")}\n${await translate(server.lan, "There is some kind of issue on the server side!")}`, ip);
+      } else if (error == "Error: Socket timed out while connecting") {
+        offline(`${ip} ${await translate(server.lan, "didn't return a ping.")}\n${await translate(server.lan, "Timed out.")}`, ip);
+      } else {
         console.log("A error occurred while trying to ping: ", error);
-        offline(`${ip} refused to connect.`, ip);
+        offline(`${ip} ${await translate(server.lan, "refused to connect.")}`, ip);
       }
       return;
     });
 
     // Server is online
-    function online(result) {
+    async function online(result) {
       // If there is no icon use pack.png
       if (result.favicon == null) {
-        var attachment = new Discord.MessageAttachment("https://i.ibb.co/YkRLWG8/down.png", "icon.png");
+        var attachment = new Discord.MessageAttachment("https://www.mcstatusbot.site/down.png", "icon.png");
       } else {
         var attachment = new Discord.MessageAttachment(Buffer.from(result.favicon.substr('data:image/png;base64,'.length), 'base64'), "icon.png");
       }
       const embed = new Discord.MessageEmbed()
         .setColor('#008000')
-        .setTitle(`${ip} is online`)
+        .setTitle(`${ip} ${await translate(server.lan, "is online")}`)
         .setDescription(result.motd.clean);
 
       // Add a players connected field if available
@@ -74,12 +85,12 @@ module.exports = {
         const playernames = result.players.sample.map(function (obj) {
           return obj.name;
         });
-        embed.addField('Players connected:', '`' + playernames.toString().replace(/,/g, ', ') + '`', false);
+        embed.addField(`${await translate(server.lan, "Players")} ${await translate(server.lan, "connected")}:`, '`' + playernames.toString().replace(/,/g, ', ') + '`', false);
       }
 
       embed.addFields({
-        name: 'Players: ',
-        value: 'Online: ' + '`' + result.players.online + '`' + '\nMax: ' + '`' + result.players.max + '`',
+        name: `${await translate(server.lan, "Players")}: `,
+        value: 'Online: ' + '`' + result.players.online + '`' + `\n${await translate(server.lan, "Max")}: ` + '`' + result.players.max + '`',
         inline: true
       }, {
         name: 'Version: ',
@@ -91,13 +102,13 @@ module.exports = {
     }
 
     // Server is offline or error
-    function offline(errortxt, ip) {
+    async function offline(errortxt, ip) {
       const embed = new Discord.MessageEmbed()
         .setColor('#FF0000')
-        .setTitle(`${ip} is offline`)
-        .setDescription(errortxt + '\n\n *If the server you are trying to ping\n is a bedrock server use `mc!ping [ip] bedrock`*')
-        .setThumbnail("https://i.ibb.co/YkRLWG8/down.png");
-      return message.editReply({ embeds: [embed] });
+        .setTitle(`${ip} ${await translate(server.lan, "is offline")}`)
+        .setDescription(errortxt + `\n\n *${await translate(server.lan, "If the server you are trying to ping is a bedrock server set the bedrock option to yes in")} \`/ping\`*`)
+        .setThumbnail("https://www.mcstatusbot.site/down.png");
+      return interaction.editReply({ embeds: [embed] });
     }
   }
 }

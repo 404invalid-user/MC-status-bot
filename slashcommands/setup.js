@@ -1,7 +1,8 @@
 const { Permissions } = require('discord.js');
-const setip = require('../slashcommands/setip.js');
+const setip = {};//require('../slashcommands/setip.js');
 const util = require('minecraft-server-util');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const translate = require('../modules/translate')
 module.exports = {
   name: 'setup',
   data: new SlashCommandBuilder()
@@ -34,35 +35,34 @@ module.exports = {
       setip.execute(interaction, server, client);
     } catch (error) {
       console.error(error);
-      return interaction.reply({ content: 'Uh, oh! An error occurred while trying to set the ip! (**X  _  X**)', allowedMentions: { repliedUser: false } });
+      return interaction.reply({ content: `${await translate(server.lan, "Uh, oh! An error occurred while trying to set the ip!")} (**X  _  X**)`, allowedMentions: { repliedUser: false } });
     }
-    const showMembers = interaction.options.getString('show-members');
-    if (showMembers == 'yes') {
-      server.MemberChannEnabled = true;
-    } else {
-      server.MemberChannEnabled = false;
-    }
+
+    server.Bedrock = interaction.options.getString('type') == 'bedrock' ? true : false;
+
+    server.MemberChannEnabled = interaction.options.getString('show-members') == 'yes' ? true : false;
+
 
     // Check if bot has all the permissions
     if (!interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_ROLES) && !interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) {
-      return interaction.reply("I don't have the necessary permissions to perform this action! - `Manage roles` and `Manage channels`");
+      return interaction.reply(`${await translate(server.lan, "I don't have the necessary permissions to perform this action!")} - \`${await translate(server.lan, "Manage roles")}\` ${await translate(server.lan, "and")} \`${await translate(server.lan, "Manage channels")}\``);
     } else if (!interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) {
-      return interaction.reply("I don't have the necessary permissions to perform this action! - `Manage channels`");
+      return interaction.reply(`${await translate(server.lan, "I don't have the necessary permissions to perform this action!")} - \`${await translate(server.lan, "Manage channels")}\``);
     } else if (!interaction.guild.me.permissions.has(Permissions.FLAGS.MANAGE_ROLES)) {
-      return interaction.reply("I don't have the necessary permissions to perform this action! - `Manage roles`");
+      return interaction.reply(`${await translate(server.lan, "I don't have the necessary permissions to perform this action!")} - \`${await translate(server.lan, "Manage roles")}\``);
     }
 
     async function servonline(result) {
       // server is online
-      await client.channels.cache.get(StatusChan.id).setName('🟢 ONLINE');
+      await client.channels.cache.get(StatusChan.id).setName(`🟢 ${await translate(server.lan, "ONLINE")}`);
       const chann = client.channels.cache.get(NumberChan.id);
       await chann.permissionOverwrites.edit(chann.guild.roles.everyone, {
         VIEW_CHANNEL: true
       });
       if (server.MemberChannEnabled) {
-        await chann.setName(`👥 Players online: ${result.players.online}`);
+        await chann.setName(`👥 ${await translate(server.lan, "Players Online")}: ${result.players.online}`);
       } else {
-        await client.channels.cache.get(NumberChan.id).setName(`👥 Players online: disabled`)
+        await client.channels.cache.get(NumberChan.id).setName(`👥 ${await translate(server.lan, "Players Online")}: disabled`)
       }
       server.pinger = {
         status: 'online',
@@ -70,11 +70,11 @@ module.exports = {
       }
     }
     async function servoffline() {
-      await client.channels.cache.get(StatusChan.id).setName('🔴 OFFLINE');
+      await client.channels.cache.get(StatusChan.id).setName(`🔴 ${await translate(server.lan, "OFFLINE")}`);
       if (server.MemberChannEnabled) {
-        await client.channels.cache.get(NumberChan.id).setName(`👥 Players online: 0`)
+        await client.channels.cache.get(NumberChan.id).setName(`👥 ${await translate(server.lan, "Players Online")}: 0`)
       } else {
-        await client.channels.cache.get(NumberChan.id).setName(`👥 Players online: disabled`)
+        await client.channels.cache.get(NumberChan.id).setName(`👥 ${await translate(server.lan, "Players Online")}: disabled`)
       }
       server.pinger = {
         status: 'offline',
@@ -98,14 +98,10 @@ module.exports = {
       }
     }
 
-    // check if server has a defined ip
-    if (!ip) {
-      return interaction.reply('Please use`/setip` to set a ip to monitor!');
-    }
 
     // Create category
     let Category;
-    await interaction.guild.channels.create(`${ip}'s status`, {
+    await interaction.guild.channels.create(`${ip}${await translate(server.lan, "'s status")}`, {
       type: 'GUILD_CATEGORY',
       position: 0,
       permissionOverwrites: [{
@@ -168,6 +164,6 @@ module.exports = {
       servoffline();
     });
     await server.save();
-    return interaction.channel.send('The channels have been created successfully! Please allow five to 10 minutes for the channels to update.');
+    return interaction.channel.send(`${await translate(server.lan, "The channels have been created successfully! Please allow five to 10 minutes for the channels to update.")}`);
   }
 }

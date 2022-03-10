@@ -1,27 +1,28 @@
-const { Client, Intents, Collection } = require('discord.js');
-const { RateLimiter } = require('discord.js-rate-limiter');
-const fs = require('fs');
+const { ShardingManager } = require("discord.js");
 const mongoose = require('mongoose');
+const express = require('express')
+const { AutoPoster } = require('topgg-autoposter')
 require('dotenv').config();
-
-const logger = require('./modules/nodeLogger.js');
-
-const Log = require('./database/logSchema');
-const Server = require('./database/ServerSchema');
+const LogSchema = require('./database/logSchema');
+const ServerSchema = require('./database/ServerSchema');
 const Redis = require('ioredis');
-
-// Handle and log and crashes
+const logger = require('./modules/nodeLogger.js');
+const webserver = express();
+const fs = require('fs')
+webserver.use((req, res, next) => {
+  req.date = Date.now();
+  next();
+});
 process.on('uncaughtException', async (error, source) => {
   await logger.crash(error.stack || error + 'at' + source);
   //process.exit(1)
 })
+const webServerSetup = require('./website/index');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
-client.rateLimiter = new RateLimiter(1, 2000) // Rate limit to one message every two seconds;
-client.commands = new Collection();
-client.slashCommands = new Collection();
-
-logger.success('Starting the bot!');
+const shards = new ShardingManager("./bot.js", {
+  token: process.env.TOKEN,
+  totalShards: "auto"
+});
 
 // Connect to database
 mongoose
@@ -36,59 +37,57 @@ const redisclient = new Redis({
   port: redisDetails.length == 3 ? redisDetails[2] : redisDetails[1]
 })
 
+global.redisclient = redisclient;
+
 // Flush redis
-redisclient.flushall(async(err, succeeded) => {
+redisclient.flushall(async (err, succeeded) => {
   logger.info(`Flushing Redis -  ${err ? err : succeeded}`)
 
   // Cache the entire mongo database to redis.
   // Cache it only after redis gets flushed
   logger.info('Started caching the databases')
 
-  await Log.find()
+  await LogSchema.find()
     .then((result) => {
       result.forEach((log) => redisclient.hset('Log', log._id, JSON.stringify(log.logs)))
       logger.info('Cached logs')
     })
     .catch((err) => logger.error(err.stack || err))
 
-  await Server.find()
+  await ServerSchema.find()
     .then((result) => {
       result.forEach((server) => {
         redisclient.hset('Server', server._id, JSON.stringify(server))
       })
       logger.info('Cached servers')
+    }).catch((err) => logger.error(err.stack || err));
 
-      // Log the client in here to prevent the bot from starting before
-      // the db has been completely cached.
-      client.login(process.env.TOKEN)
-    })
-    .catch((err) => logger.error(err.stack || err))
-})
 
-// Make the redis client global
-global.redisclient = redisclient
 
-// Command handling
-const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'))
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`)
-  client.commands.set(command.name, command)
-}
-
-// slash Command handling
-const slashCommandFiles = fs.readdirSync('./slashcommands').filter((file) => file.endsWith('.js'))
-for (const file of slashCommandFiles) {
-  const command = require(`./slashcommands/${file}`)
-  client.slashCommands.set(command.name, command)
-}
-
-// Event handling
-const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'))
-for (const file of eventFiles) {
-  const event = require(`./events/${file}`)
-  if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args, client))
-  } else {
-    client.on(event.name, (...args) => event.execute(...args, client))
+  const lanFiles = fs.readdirSync(`${__dirname}/languages/`).filter((file) => file.endsWith(".json"));
+  for (let fileName of lanFiles) {
+    let file = require(`${__dirname}/languages/${fileName}`);
+    redisclient.hset('lan', file.iso, JSON.stringify(file));
   }
-}
+
+});
+
+
+shards.on("shardCreate", shard => {
+  logger.info(`Launched shard #${shard.id}`);
+});
+
+// Post stats to top.gg
+if (process.env.TOPGGAPI) {
+  AutoPoster(process.env.TOPGGAPI, shards).on('posted', () => {
+    logger.info('Posted stats to Top.gg!')
+  });
+} else logger.info("No topgg token was provided - stats won't be posted to top.gg!")
+
+shards.spawn(shards.totalShards, 10000);
+
+webServerSetup(webserver, redisclient, shards);
+
+webserver.listen(process.env.PORT, () => {
+  logger.success("web server listening on port " + process.env.PORT);
+})

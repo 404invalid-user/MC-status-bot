@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /server
+Disallow: /admin
+Disallow: /
+
+
+Sitemap: http://www.mcstatusbot.site/sitemap.xml

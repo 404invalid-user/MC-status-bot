@@ -2,18 +2,14 @@ const Discord = require('discord.js');
 const axios = require('axios');
 const parser = require("fast-xml-parser");
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const translate = require('../modules/translate')
 
 module.exports = {
   name: 'news',
   data: new SlashCommandBuilder()
     .setName('news')
     .setDescription('see the latest articles from minecraft.net'),
-  async execute(message) {
-
-    //stop this from brekaing the bot if its an message
-    try {
-      message.replyTyping();
-    } catch (e) { };
+  async execute(interaction) {
 
     // Get the xml, we emulate a browser by including the user-agent header
     try {
@@ -39,10 +35,10 @@ module.exports = {
         )
       /* beautify preserve:end */
 
-      message.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed] });
     } catch (err) {
       console.error(err);
-      message.reply('Uh oh, an error occurred while trying to fetch the news! Try again later!');
+      interaction.reply('Uh oh, an error occurred while trying to fetch the news! Try again later!');
       return;
     }
   }

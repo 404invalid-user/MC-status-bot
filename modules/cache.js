@@ -1,11 +1,12 @@
 const Log = require('../database/logSchema')
-const Server = require('../database/ServerSchema')
+const Server = require('../database/ServerSchema');
+const User = require('../database/dashboard')
 
 const util = require('util')
 const mongoose = require('mongoose')
 const logger = require('../modules/nodeLogger.js')
 
-const client = global.redisclient
+const client = global.redisclient;
 client.hget = util.promisify(client.hget)
 client.hgetall = util.promisify(client.hgetall)
 
@@ -40,8 +41,13 @@ module.exports = {
                 result = await Server.findById({ _id: key });
                 result._id = undefined // Remove the _id from the value
                 client.hset(collection, key, JSON.stringify(result))
+            } else if (collection == 'dashboard') {
+                result = await User.findById({ _id: key })
+                if (result != null) {
+                    client.hset(collection, key, JSON.stringify(result))
+                }
             } else {
-                logger.error(`${collection} is not a valid collection name - Log or Server!`)
+                logger.error(`${collection} is not a valid collection name - Log,dashboard or Server!`)
                 return
             }
 
@@ -54,6 +60,8 @@ module.exports = {
                     mdbupdate = await Server.findOne({ _id: key });
                 } else if (collection == 'Log') {
                     mdbupdate = await Log.findOne({ _id: key });
+                } else if (collection == 'dashboard') {
+                    mdbupdate = await User.findOne({ _id: key });
                 } else {
                    throw `${collection} is not a valid collection name!`;
                 }
@@ -80,8 +88,10 @@ module.exports = {
             client.hset(collection, key, '[]')
         } else if (collection == 'Server') {
             client.hset(collection, key, value ? JSON.stringify(value) : '{"IP": "", "Logging": false}')
-        } else {
-            logger.error(`${collection} is not a valid collection name - Log or Server!`)
+        } else if(collection == 'dashboard') {
+            client.hset(collection, key, JSON.stringify(value))
+        }else {
+            logger.error(`${collection} is not a valid collection name - Log, dashboard or Server!`)
             return
         }
     },
