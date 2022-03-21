@@ -24,7 +24,7 @@ export default {
   methods: {
     translate(text) {
       if (this.me.lan == 'en') return text
-      return language[text]
+      return this.language[text]
     },
     openLanMenu() {
       axios

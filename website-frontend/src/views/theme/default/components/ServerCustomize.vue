@@ -11,7 +11,6 @@ export default {
         url: ''
       },
       colours: {
-        embed: '',
         text: {
           title: '',
           time: '',
@@ -46,13 +45,31 @@ export default {
       return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b)
     },
     colourUpdate() {
-      this.server.config.chart.embed[this.selected].color = this.hexTorgb(this.colours.embed)
       this.server.config.chart.graph.text.title = this.hexTorgb(this.colours.text.title)
       this.server.config.chart.graph.text.time = this.hexTorgb(this.colours.text.time)
       this.server.config.chart.graph.text.state = this.hexTorgb(this.colours.text.state)
 
       this.server.config.chart.graph.line.fill = this.hexTorgb(this.colours.line.fill)
       this.server.config.chart.graph.line.border = this.hexTorgb(this.colours.line.border)
+    },
+    errorInput(inputid, text, time) {
+      document.getElementById(inputid).classList.add('error')
+      document.getElementById(inputid + '-txt').innerText = text
+      setTimeout(
+        () => {
+          document.getElementById(inputid).classList.remove('error')
+          document.getElementById(inputid + '-text').innerText = ''
+        },
+        time ? parseInt(time + '000') : 32000
+      )
+    },
+    validateContent(id, le) {
+      const value = document.getElementById(id).value
+      if (value.split('').length > le ? le : 2000) {
+        return this.errorInput(id, 'Error: too long ' + value.split('').length + ' over ' + le ? le : 2000 + '.')
+      }
+      document.getElementById(id).classList.remove('error')
+      document.getElementById(id + '-txt').innerText = ''
     }
   },
   props: {
@@ -63,7 +80,6 @@ export default {
   async beforeMount() {
     console.log(this.server.config.chart.embed)
     this.colours = {
-      embed: this.rgbToHex(this.server.config.chart.embed.uptime.color),
       text: {
         title: this.rgbToHex(this.server.config.chart.graph.text.title),
         time: this.rgbToHex(this.server.config.chart.graph.text.time),
@@ -185,13 +201,20 @@ p {
 .button-server:hover {
   background-color: #bbbbbb;
 }
+input .error {
+  border: 1px solid red;
+}
+p .error {
+  color: red;
+  font-size: 0.4em;
+}
 </style>
 <template>
   <div class="bruh">
     <p>{{ translate('see our [] variables guide at') }} <a href="http://docs.mcstatusbot.site/guide/variable" target="_blank">docs.mcstatusbot.site/guide/variables</a></p>
     <p>{{ translate('Enabled') }}:</p>
     <label class="switch">
-      <input type="checkbox" v-model="server.config.enabled" />
+      <input type="checkbox" v-model="server.config.chart.enabled" />
       <span class="slider"></span>
     </label>
     <p>{{ translate('Embeds') }}:</p>
@@ -201,12 +224,18 @@ p {
       <option value="mostactive">mostactive</option>
     </select>
     <div class="bruh" style="margin-top: 0">
-      <p>{{ translate('Title') }}:</p>
-      <input type="text" v-model="server.config.chart.embed[selected].title" />
-      <p>{{ translate('Description') }}:</p>
-      <input type="text" v-model="server.config.chart.embed[selected].description" />
+      <div>
+        <p>{{ translate('Title') }}:</p>
+        <input type="text" v-model="server.config.chart.embed[selected].title" id="chart-title" @input="validateContent('chart-title', 150)" />
+        <p class="error" id="chart-title-text"></p>
+      </div>
+      <div>
+        <p>{{ translate('Description') }}:</p>
+        <input type="text" v-model="server.config.chart.embed[selected].description" id="chart-description" @input="validateContent('chart-description', 150)" />
+        <p class="error" id="chart-description-text"></p>
+      </div>
       <p>{{ translate('Embed Colour') }}:</p>
-      <input type="color" v-model="colours.embed" @change="colourUpdate" />
+      <input type="color" v-model="server.config.chart.embed[selected].color" />
     </div>
     <p>{{ translate('Graph') }}:</p>
     <div class="bruh" style="margin-top: 0">

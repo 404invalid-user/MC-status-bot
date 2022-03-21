@@ -41,13 +41,13 @@ module.exports = {
         result = await Server.findById({ _id: key })
         result._id = undefined // Remove the _id from the value
         client.hset(collection, key, JSON.stringify(result))
-      } else if (collection == 'dashboard') {
+      } else if (collection == 'user') {
         result = await User.findById({ _id: key })
         if (result != null) {
           client.hset(collection, key, JSON.stringify(result))
         }
       } else {
-        logger.error(`${collection} is not a valid collection name - Log,dashboard or Server!`)
+        logger.error(`${collection} is not a valid collection name - Log,user or Server!`)
         return
       }
     }
@@ -58,7 +58,7 @@ module.exports = {
           mdbupdate = await Server.findOne({ _id: key })
         } else if (collection == 'Log') {
           mdbupdate = await Log.findOne({ _id: key })
-        } else if (collection == 'dashboard') {
+        } else if (collection == 'user') {
           mdbupdate = await User.findOne({ _id: key })
         } else {
           throw `${collection} is not a valid collection name!`
@@ -86,10 +86,10 @@ module.exports = {
       client.hset(collection, key, '[]')
     } else if (collection == 'Server') {
       client.hset(collection, key, value ? JSON.stringify(value) : '{"IP": "", "Logging": false}')
-    } else if (collection == 'dashboard') {
+    } else if (collection == 'user') {
       client.hset(collection, key, JSON.stringify(value))
     } else {
-      logger.error(`${collection} is not a valid collection name - Log, dashboard or Server!`)
+      logger.error(`${collection} is not a valid collection name - Log, user or Server!`)
       return
     }
   },

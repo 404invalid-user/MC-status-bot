@@ -17,7 +17,7 @@ export default {
   props: {
     bot: Object,
     me: Object,
-    translate: Function
+    translate: Function,
   },
   methods: {
     select(id) {
@@ -47,8 +47,16 @@ export default {
       window.location.href = `https://discord.com/oauth2/authorize?client_id=${this.bot.id}&permissions=269798480&scope=bot%20applications.commands`
     }
   },
-  beforeMount() {
-    console.log(this.me)
+  created() {
+    for (let server of this.me.guilds) {
+      if (!server.pinger) {
+        server.pinger = {
+          maxMembers: '0',
+          members: '0',
+          status: 'offline'
+        }
+      }
+    }
   }
 }
 </script>
@@ -226,9 +234,9 @@ img.ping {
           </div>
           <div class="info">
             <div class="signal-top">
-              <span class="online">{{ server.channel.members }}</span
-              ><span class="slash">/</span><span class="max">{{ server.maxMembers }}</span
-              ><img src="signal.png" class="ping" />
+              <span class="online">{{ server.pinger.members }}</span
+              ><span class="slash">/</span><span class="max">{{ server.pinger.maxMembers }}</span
+              ><img :src="server.pinger.status == 'online' ? 'signal.png' : 'no-signal.png'" class="ping" />
             </div>
           </div>
         </div>

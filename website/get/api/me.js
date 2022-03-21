@@ -8,17 +8,18 @@ module.exports = {
       if (req.user == null) {
         return res.status(401).json({ message: '401: incorrect details please login again', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
       }
-      let userGuilds = []
+      const user = await cache.lookup('user', req.user._id);
+      user.guilds = [];
+      user.save = undefined;
       for (const g of req.user.guilds) {
         if (g.mutual) {
-          const guild = await cache.lookup('Server', g.id).catch((e) => {})
+          const guild = await cache.lookup('Server', g._id).catch((e) => {})
           if (guild !== null) {
-            userGuilds.push(guild)
+            user.guilds.push(guild)
           }
         }
       }
-      req.user.guilds = userGuilds
-      return res.status(200).json({ message: '200: success', me: req.user, responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
+      return res.status(200).json({ message: '200: success', me: user, responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
     } catch (err) {
       logger.error(err.stack || err)
       return res.status(500).json({ message: '500: unknown error please report this', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })

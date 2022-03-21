@@ -1,6 +1,6 @@
 const path = require('path')
 const translate = require('../../../modules/translate')
-const moment = require('moment')
+const moment = require('moment-timezone')
 const cache = require('../../../modules/cache.js')
 
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas')
@@ -42,14 +42,12 @@ module.exports = {
       let xLabels = []
 
       let playersList = []
-
       logs.forEach((log) => {
         if (log.playerNamesOnline) {
           const players = log.playerNamesOnline.split(',')
           playersList.push(...players)
         }
-
-        xLabels.push(moment(log.timestamp).format('HH:mm'))
+        xLabels.push(moment(log.timestamp).tz(server.timezone ? server.timezone : "ETC").format('YYYY / MMM / DD / HH:mm'));
       })
 
       if (playersList.length > 0) {
@@ -99,7 +97,7 @@ module.exports = {
       const lineColour = { fill: '8, 174, 228', border: '39, 76, 113', colour: '39, 76, 113' }
       const textColour = { time: '253, 253, 253', state: '253, 253, 253', title: '253, 253, 253' }
 
-      if (server.config.enabled) {
+      if (server.config.chart.enabled) {
         lineColour.fill = server.config.chart.graph.line.fill
         lineColour.border = server.config.chart.graph.line.border
         textColour.title = server.config.chart.graph.text.title
@@ -113,7 +111,7 @@ module.exports = {
           labels: xLabels,
           datasets: [
             {
-              label: `${await translate(server.lan, 'Number of minutes played')}`,
+              label: `${await translate(server.lan, 'Minutes played')}`,
               data: yLabels,
               fill: true,
               color: 'rgb(' + lineColour.colour + ')',
@@ -142,6 +140,12 @@ module.exports = {
           },
           scales: {
             y: {
+              title: {
+                display: true,
+                text: `${await translate(server.lan, 'Number of minutes played')}`,
+                color:'rgb(' + textColour.title + ')',
+            
+          },
               beginAtZero: true,
               ticks: {
                 color: 'rgb(' + textColour.state + ')',
@@ -154,6 +158,11 @@ module.exports = {
               }
             },
             x: {
+              title: {
+                display: true,
+                text: `${await translate(server.lan, "Time")} - (${server.timezone ? server.timezone : "ETC"})`,
+                color: 'rgb(' + textColour.title + ')',
+              },
               ticks: {
                 color: 'rgb(' + textColour.time + ')',
                 fontSize: 13,

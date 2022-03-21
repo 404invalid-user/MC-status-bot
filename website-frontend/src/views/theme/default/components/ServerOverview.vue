@@ -3,17 +3,57 @@
 
 export default {
   name: 'ServerOverview',
-  methods: {},
+  methods: {
+    errorInput(inputid, text, time) {
+      document.getElementById(inputid).classList.add('error')
+      document.getElementById(inputid + '-txt').innerText = text
+      setTimeout(
+        () => {
+          document.getElementById(inputid).classList.remove('error')
+          document.getElementById(inputid + '-text').innerText = ''
+        },
+        time ? parseInt(time + '000') : 32000
+      )
+    },
+    validateIp(id) {
+      //lmo yeah ima just see if it has .
+      const value = document.getElementById(id).value
+      if(!value.includes('.')) {
+        return this.errorInput(id, 'Error: ip/domain appears to be incorrect.')
+      }
+         document.getElementById(id).classList.remove('error')
+      document.getElementById(id + '-txt').innerText = ''
+    },
+    validateContent(id, le) {
+      const value = document.getElementById(id).value
+      if (value.split('').length > le ? le : 2000) {
+        return this.errorInput(id, 'Error: too long ' + value.split('').length + ' over ' + le ? le : 2000 + '.')
+      }
+         document.getElementById(id).classList.remove('error')
+      document.getElementById(id + '-text').innerText = ''
+    },
+    validateUrl(id) {
+      const value = document.getElementById(id).value
+      try {
+        let url = new URL(value)
+      } catch (_) {
+        return this.errorInput(id, 'Error: invalid url')
+      }
+      document.getElementById(id).classList.remove('error')
+      document.getElementById(id + '-txt').innerText = ''
+    }
+  },
   props: {
     me: Object,
     server: Object,
-    translate: Function
+    translate: Function,
+    timezones: Array
   }
 }
 </script>
 
 <style scoped>
-input[type='text'] {
+input {
   height: 38px;
   border: 2px solid black;
   width: 80%;
@@ -118,18 +158,41 @@ p {
 .button-server:hover {
   background-color: #bbbbbb;
 }
+input .error {
+  border: 1px solid red;
+}
+p .error {
+  color: red;
+  font-size: 0.4em;
+}
 </style>
 <template>
   <div class="bruh">
+    <div>
     <p>{{ translate('Server name') }}:</p>
-    <input type="text" v-model="server.name" disabled />
+    <input type="text" v-model="server.name" disabled id="server-name"/>
+    <p class="error" id="server-name-text"></p>
+    </div>
+    <div>
     <p>{{ translate('Server IP') }}:</p>
-    <input type="text" v-model="server.IP" />
+    <input type="text" v-model="server.IP" id="server-ip" @input="validateIp('server-ip')"/>
+    <p class="error" id="server-ip-text"></p>
+    </div>
     <p>{{ translate('Logging') }}:</p>
     <label class="switch">
       <input type="checkbox" v-model="server.Logging" />
       <span class="slider"></span>
     </label>
+    <p>{{ translate('Timezone') }}:</p>
+    <input list="timezone" v-model="server.timezone" />
+    <datalist id="timezone">
+      <option
+        v-for="timezone of timezones"
+        :key="timezone"
+        :value="timezone"
+      ></option>
+    </datalist>
+   
     <p>{{ translate('Bedrock') }}:</p>
     <label class="switch">
       <input type="checkbox" v-model="server.Bedrock" />

@@ -9,7 +9,7 @@ import ServerOverview from '@/views/theme/default/components/ServerOverview.vue'
 import ServerCharts from '@/views/theme/default/components/ServerCharts.vue'
 import ServerCustomize from '@/views/theme/default/components/ServerCustomize.vue'
 import ServerChannels from '@/views/theme/default/components/ServerChannels.vue'
-import Server from '@/views/Server.vue'
+import ServerNotifications from '@/views/theme/default/components/ServerNotifications.vue'
 export default {
   name: 'HomeView',
   components: {
@@ -18,14 +18,16 @@ export default {
     UserData,
     ServerOverview,
     ServerCharts,
-    ServerCustomize,
-    ServerChannels
+    ServerChannels,
+    ServerNotifications,
+    ServerCustomize
   },
   props: {
     me: Object,
     server: Object,
     language: Object,
-    message: Object
+    message: Object,
+    timezones: Array
   },
   data() {
     return {
@@ -58,22 +60,25 @@ export default {
         .post('/api/server', { data: this.server })
         .then((r) => {
           this.sendMessage('server saved')
-        })
-        .catch((e) => {
-          this.sendErrorMessage('there was an error saving the server')
-          console.log('[/api/server]: ' + e.stack || e)
-        })
+        }).catch(({ response }) => { 
+          if (response.status == 400) {
+            return this.sendErrorMessage('Error: saving server, ' + response.data.error + '\nReport ID: ' + response.data.errorid);
+          }
+             this.sendErrorMessage('Error: there was an error saving the server\nReport ID: ' + response.data.errorid)
+     })
     },
     saveProfile() {
       axios
         .post('/api/me', { data: this.server })
         .then((r) => {
           this.sendMessage('Profile saved')
-        })
-        .catch((e) => {
-          this.sendErrorMessage('there was an error saving your profile')
-          console.log('[/api/server]: ' + e.stack || e)
-        })
+        }).catch(({ response }) => { 
+          if (response.status == 400) {
+            return this.sendErrorMessage('Error: saving profile, ' + response.data.error + '\nReport ID: ' + response.data.errorid);
+          }
+             this.sendErrorMessage('Error: there was an error saving your profile\nReport ID: ' + response.data.errorid)
+   
+     })
     }
   }
 }
@@ -167,8 +172,8 @@ h1 {
   /* flex-direction: column; */
   border: 2.7px solid black;
   margin: 2% 3%;
-  min-height: 70vh;
-  max-height: 70vh;
+  min-height: 80vh;
+  max-height: 80vh;
   overflow: hidden;
 }
 
@@ -314,6 +319,15 @@ p {
                 </svg>
                 {{ translate('Overview') }}</a
               >
+              <a @click="selected = 'notifications'" :class="[selected == 'notifications' ? 'selected' : '', 'button-server']"
+                ><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#424242">
+                  <path d="M0 0h24v24H0V0z" fill="none" />
+                  <path
+                    d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"
+                  />
+                </svg>
+                {{ translate('Notifications') }}</a
+              >
               <a @click="selected = 'charts'" :class="[selected == 'charts' ? 'selected' : '', 'button-server']">
                 <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#424242">
                   <rect fill="none" height="24" width="24" />
@@ -344,10 +358,11 @@ p {
             </div>
             <UserProfile v-if="selected == 'profile'" :me="me" :translate="translate" class="view" @save-profile="saveProfile" />
             <UserData v-else-if="selected == 'manage-data'" :me="me" :translate="translate" class="view" />
-            <ServerOverview v-else-if="selected == 'overview'" :me="me" :server="server" :translate="translate" class="view" @save="save" />
+            <ServerOverview v-else-if="selected == 'overview'" :me="me" :server="server" :translate="translate" :timezones="timezones" class="view" @save="save" />
+            <ServerNotifications v-else-if="selected == 'notifications'" :me="me" :server="server" :translate="translate" class="view" @save="save" />
             <ServerCharts v-else-if="selected == 'charts'" :me="me" :server="server" :translate="translate" class="view" />
             <ServerCustomize v-else-if="selected == 'customize'" :me="me" :server="server" :translate="translate" class="view" @save="save" />
-            <serverChannels v-else-if="selected == 'channels'" :me="me" :server="server" :translate="translate" class="view" @save="save" />
+            <ServerChannels v-else-if="selected == 'channels'" :me="me" :server="server" :translate="translate" class="view" @save="save" />
           </div>
         </div>
       </div>

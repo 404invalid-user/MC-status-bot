@@ -15,7 +15,7 @@ module.exports = {
 
       let canAccessServer = false
       for (const g of req.user.guilds) {
-        if (g.id == server._id) {
+        if (g._id == server._id) {
           canAccessServer = true
         }
       }

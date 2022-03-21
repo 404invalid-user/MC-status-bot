@@ -1,6 +1,7 @@
 const path = require('path')
 //rgb(47, 49, 54)
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas')
+const { translateAliases } = require('../../../database/adminlogviews')
 module.exports = {
   path: '/chart/example.png',
   dynamic: false,
@@ -10,7 +11,8 @@ module.exports = {
       const chartJSNodeCanvas = new ChartJSNodeCanvas({
         width: 1000,
         height: 400,
-        backgroundColour: 'rgb(47, 49, 54)'
+        backgroundColour: 'rgb(47, 49, 54)',
+       
       })
       const lineColour = { fill: req.query['line-fill'].replaceAll('%20', ' '), border: req.query['line-border'].replaceAll('%20', ' '), colour: '39, 76, 113' }
       const textColour = {
@@ -316,7 +318,7 @@ module.exports = {
           ],
           datasets: [
             {
-              label: 'number of minutes played',
+              label: 'Online Players',
               data: [
                 3, 4, 1, 2, 4, 2, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 3, 5, 4, 3, 3, 3, 4, 4, 3, 3, 2, 3, 1, 2, 2, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 3, 2,
                 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 3, 3, 2, 0, 0, 0, 0, 1,
@@ -341,6 +343,12 @@ module.exports = {
             }
           },
           plugins: {
+            title: {
+              display: true,
+              text: `Players online`,
+              color:'rgb(' + textColour.title + ')',
+          },
+            
             legend: {
               labels: {
                 color: 'rgb(' + textColour.title + ')',
@@ -352,6 +360,13 @@ module.exports = {
           },
           scales: {
             y: {
+          
+                title: {
+                  display: true,
+                  text: 'Number of online players',
+                  color:'rgb(' + textColour.title + ')',
+              
+            },
               beginAtZero: true,
               ticks: {
                 color: 'rgb(' + textColour.state + ')',
@@ -364,6 +379,13 @@ module.exports = {
               }
             },
             x: {
+          
+                title: {
+                  display: true,
+                  text: 'Time - (ETC)',
+                  color:'rgb(' + textColour.title + ')',
+              
+            },
               ticks: {
                 color: 'rgb(' + textColour.time + ')',
                 fontSize: 13,

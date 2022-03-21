@@ -77,7 +77,7 @@ module.exports = {
       const lineColour = { fill: '8, 174, 228', border: '39, 76, 113', colour: '39, 76, 113' }
       const textColour = { time: '253, 253, 253', state: '253, 253, 253', title: '253, 253, 253' }
 
-      if (server.config.enabled) {
+      if (server.config.chart.enabled) {
         lineColour.fill = server.config.chart.graph.line.fill
         lineColour.border = server.config.chart.graph.line.border
         textColour.title = server.config.chart.graph.text.title

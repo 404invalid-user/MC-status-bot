@@ -112,15 +112,15 @@ module.exports = {
 
     function formatText(text) {
       let edit = text
-        .replaceAll('[IP]', server.IP)
-        .replaceAll('[name]', server.name)
         .replaceAll('[ip]', server.IP)
-        .replaceAll('[maxplayers]', Math.max(...playersOnline))
-        .replaceAll('[minplayers]', Math.min(...playersOnline))
+        .replaceAll('[ip-noport]', server.IP.split(':')[0])
+        .replaceAll('[name]', server.name)
+        .replaceAll('[maxplayersonline]', Math.max(...playersOnline))
+        .replaceAll('[minplayersonline]', Math.min(...playersOnline))
         .replaceAll('[uptime]', uptime.online * 5)
         .replaceAll('[downtime]', uptime.offline * 5)
-        .replaceAll('[onlinepercent]', `${Math.round(((uptime.online / (uptime.online + uptime.offline)) * 100 + Number.EPSILON) * 100) / 100}%`)
-        .replaceAll('[offlinepercent]', `${Math.round(((uptime.offline / (uptime.online + uptime.offline)) * 100 + Number.EPSILON) * 100) / 100}%`)
+        .replaceAll('[uptimepercent]', `${Math.round(((uptime.online / (uptime.online + uptime.offline)) * 100 + Number.EPSILON) * 100) / 100}%`)
+        .replaceAll('[downtimepercent]', `${Math.round(((uptime.offline / (uptime.online + uptime.offline)) * 100 + Number.EPSILON) * 100) / 100}%`)
         .replaceAll('[mostactivename]', mostActive.name)
         .replaceAll('[mostactivetime]', mostActive.time)
       return edit
@@ -133,29 +133,29 @@ module.exports = {
 
     if (chartType == 'playersonline') {
       label = await translate(server.lan, 'Number of players')
-      embedTitle = server.config.enabled ? formatText(server.config.chart.embed.playersonline.title) : `Number of players online on ${server.IP}`
-      embedDescription = server.config.enabled
+      embedTitle = server.config.chart.enabled ? formatText(server.config.chart.embed.playersonline.title) : `Number of players online on ${server.IP}`
+      embedDescription = server.config.chart.enabled
         ? formatText(server.config.chart.embed.playersonline.description)
         : `There have been a maximum of ${Math.max(...playersOnline)} players online at once, and a minimum of ${Math.min(...playersOnline)}.`
-      if (server.config.enabled) embedColour = server.config.chart.embed.playersonline.color
+      if (server.config.chart.enabled) embedColour = server.config.chart.embed.playersonline.color
       yLabels = playersOnline
     } else if (chartType == 'uptime') {
       label = await translate(server.lan, 'Uptime')
-      embedTitle = server.config.enabled ? formatText(server.config.chart.embed.uptime.title) : `${server.IP}'s uptime`
-      embedDescription = server.config.enabled
+      embedTitle = server.config.chart.enabled ? formatText(server.config.chart.embed.uptime.title) : `${server.IP}'s uptime`
+      embedDescription = server.config.chart.enabled
         ? formatText(server.config.chart.embed.uptime.description)
         : `${server.IP} was up for ${uptime.online * 5} minutes and down for ${uptime.offline * 5} minutes. This means that ${server.IP} has a uptime percentage of ${
             Math.round(((uptime.online / (uptime.online + uptime.offline)) * 100 + Number.EPSILON) * 100) / 100
           }%`
-      if (server.config.enabled) embedColour = server.config.chart.embed.uptime.color
+      if (server.config.chart.enabled) embedColour = server.config.chart.embed.uptime.color
       yLabels = mcServerUptime
     } else if (chartType == 'mostactive') {
       label = await translate(server.lan, 'Number of minutes played')
-      embedTitle = server.config.enabled ? formatText(server.config.chart.embed.mostactive.title) : `Most active players on ${server.IP} in the last 24 hours`
-      embedDescription = server.config.enabled
+      embedTitle = server.config.chart.enabled ? formatText(server.config.chart.embed.mostactive.title) : `Most active players on ${server.IP} in the last 24 hours`
+      embedDescription = server.config.chart.enabled
         ? formatText(server.config.chart.embed.mostactive.description)
         : `${mostActive.name} was the most active player with ${mostActive.time} minutes spent online in the last 24 hours.`
-      if (server.config.enabled) embedColour = server.config.chart.embed.mostactive.color
+      if (server.config.chart.enabled) embedColour = server.config.chart.embed.mostactive.color
       xLabels.push(mostActive.name)
       yLabels.push(mostActive.time)
     }
@@ -187,7 +187,7 @@ module.exports = {
     const lineColour = { fill: '8, 174, 228', border: '39, 76, 113', colour: '39, 76, 113' }
     const textColour = { time: '253, 253, 253', state: '253, 253, 253', title: '253, 253, 253' }
 
-    if (server.config.enabled) {
+    if (server.config.chart.enabled) {
       lineColour.fill = server.config.chart.graph.line.fill
       lineColour.border = server.config.chart.graph.line.border
       textColour.title = server.config.chart.graph.text.title

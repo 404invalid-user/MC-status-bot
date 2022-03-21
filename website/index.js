@@ -36,7 +36,7 @@ module.exports = (webServer, redisclient, shards) => {
       }, {})
 
       if (cookies.id && cookies.token) {
-        const currentUser = await cache.lookup('dashboard', cookies.id).catch((e) => {})
+        const currentUser = await cache.lookup('user', cookies.id).catch((e) => {})
 
         if (currentUser == null) {
           req.user = null
@@ -68,7 +68,6 @@ module.exports = (webServer, redisclient, shards) => {
   })
 
   webServer.use('/api/', apiLimiter)
-
   ;['get', 'post'].forEach((handler) => {
     require(`./handlers/${handler}`)(webServer, shards)
   })

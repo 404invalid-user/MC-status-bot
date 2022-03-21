@@ -56,7 +56,62 @@ redisclient.flushall(async (err, succeeded) => {
 
   await ServerSchema.find()
     .then((result) => {
-      result.forEach((server) => {
+      result.forEach(async (server) => {
+          server.config = {
+            enabled: false,
+            notifications: {
+              webhook: {
+                enabled: false,
+                url: '',
+                content: '[ip] is [status]',
+              },
+              bot: {
+                enabled: false,
+                content: '[ip] is [status]',
+                channel: '',
+              },
+              email: {
+                enabled: false,
+                to: 'no-one@mcstatusbot.site',
+                subject: '[ip] is [status]',
+                content: '[ip] is [status]',
+              },
+            },
+            chart: {
+              enabled: true,
+              embed: {
+                uptime: {
+                  title: "[ip]'s uptime",
+                  description: "[ip] was up for [uptime] minutes and down for [downtime] minutes. This means that [ip] has a uptime percentage of [onlinepercent] and downtime percentage of [offlinepercent]",
+                  color: "#FFFFF"
+                },
+                playersonline: {
+                  title: "Number of players online on [ip]",
+                  description: "There have been a maximum of [maxplayers] players online at once, and a minimum of [minplayers].",
+                  color: "#FFFFF"
+                },
+                mostactive: {
+                  title: "Most active players on [ip] in the last 24 hours",
+                  description: "[mostactive] was the most active player with [mostactiveminutes] minutes spent online in the last 24 hours.",
+                  color: "#FFFFF"
+                }
+              },
+              graph: {
+                text: {
+                  title: '253, 253, 253',
+                  time: '253, 253, 253',
+                  state: '253, 253, 253'
+                },
+                line: {
+                  fill: '8, 174, 228',
+                  border: '39, 76, 113'
+                }
+              }
+            }
+          }
+          await server.save();
+          console.log("SAVED")
+      
         redisclient.hset('Server', server._id, JSON.stringify(server))
       })
       logger.info('Cached servers')

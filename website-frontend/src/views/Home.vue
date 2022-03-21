@@ -14,7 +14,7 @@ export default {
   data() {
     return {
       me: {
-        local: 'en',
+        lan: 'en',
         options: {
           darkMode: false,
           theme: 'default',
@@ -27,7 +27,7 @@ export default {
   beforeMount() {
     axios.get('/api/me').then((response) => {
       if (response.status == 200) {
-        this.me = response.data.me
+        this.me = response.data.me;
       }
     })
   },

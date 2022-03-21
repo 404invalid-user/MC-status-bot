@@ -74,13 +74,13 @@ module.exports = {
 
         for await (const userGuild of userGuilds) {
           guilds.push({
-            id: userGuild.id,
+            _id: userGuild.id,
             mutual: botGuilds.includes(userGuild.id) ? true : false,
             admin: dbc.permissions(userGuild.permissions_new).includes('MANAGE_GUILD') ? true : false
           })
         }
         delete botGuilds
-        let currentUser = await cache.lookup('dashboard', userInfo.id).catch((e) => {})
+        let currentUser = await cache.lookup('user', userInfo.id).catch((e) => {})
         if (currentUser == null) {
           await User.create({
             _id: userInfo.id,
@@ -90,7 +90,7 @@ module.exports = {
             accessCodes: [{ browser: req.headers['user-agent'], code: randomString }],
             guilds: guilds
           })
-          currentUser = await cache.lookup('dashboard', userInfo.id).catch((e) => {})
+          currentUser = await cache.lookup('user', userInfo.id).catch((e) => {})
         } else {
           let gotCorrectAccessCode = false
           if (res.locals.cookie.accesscode) {
@@ -109,8 +109,8 @@ module.exports = {
           currentUser.guilds = guilds
           currentUser.save()
         }
-        cache.removeCache('dashboard', currentUser._id)
-        cache.createCache('dashboard', currentUser._id, currentUser)
+        cache.removeCache('user', currentUser._id)
+        cache.createCache('user', currentUser._id, currentUser)
 
         res
           .cookie('id', currentUser._id, { expires: new Date(253402300000000), httpOnly: true })

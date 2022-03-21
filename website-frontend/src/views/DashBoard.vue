@@ -17,7 +17,7 @@ export default {
       language: {},
       ready: false,
       me: {
-        local: 'en',
+        lan: 'en',
         options: {
           darkMode: false,
           theme: 'default'
@@ -48,28 +48,12 @@ export default {
       return false
     }
   },
-  beforeMount() {
+  async beforeMount() {
     //get user
-    axios
+    await axios
       .get('/api/me')
       .then((response) => {
-        this.me = response.data.me
-        if (this.me.lan !== 'en') {
-          //get users language
-          axios
-            .get('/api/language?lan=' + this.me.lan)
-            .then((res) => {
-              this.language = res.data
-            })
-            .catch((err) => {
-              console.log('[/api/language]: ' + err.stack || err)
-              this.message.content = 'Could not fetch your language try refreshing'
-              this.message.error = true
-              this.message.show = true
-            })
-        }
-        //ready the page and stop showing load icon
-        this.ready = true
+        this.me = response.data.me;
       })
       .catch((e) => {
         console.log('[/api/me]: ' + e.stack || e)
@@ -81,6 +65,22 @@ export default {
         this.message.error = true
         this.message.show = true
       })
+    if (this.me.lan !== 'en') {
+      //get users language
+      await axios
+        .get('/api/language?lan=' + this.me.lan)
+        .then((res) => {
+          this.language = res.data
+        })
+        .catch((err) => {
+          console.log('[/api/language]: ' + err.stack || err)
+          this.message.content = 'Could not fetch your language try refreshing'
+          this.message.error = true
+          this.message.show = true
+        })
+    }
+    //ready the page and stop showing load icon
+    this.ready = true
   }
 }
 </script>
@@ -96,7 +96,7 @@ export default {
         }
       "
     />
-    <Loading v-if="!ready" />
+    <Loading v-if="!ready" :message="message" />
     <DefaultThemeDashboard v-else-if="ready && me.options.theme == 'default'" :bot="bot" :me="me" :translate="translate" />
   </body>
 </template>
