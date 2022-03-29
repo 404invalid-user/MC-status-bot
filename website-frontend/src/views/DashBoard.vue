@@ -53,7 +53,7 @@ export default {
     await axios
       .get('/api/me')
       .then((response) => {
-        this.me = response.data.data;
+        this.me = response.data.data
       })
       .catch((e) => {
         console.log('[/api/me]: ' + e.stack || e)

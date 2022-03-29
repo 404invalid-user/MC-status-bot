@@ -30,7 +30,7 @@ export default {
       axios
         .get('/api/languages')
         .then((response) => {
-          this.languages = response.data.data;
+          this.languages = response.data.data
         })
         .catch((err) => {
           console.log('[/api/languages]: ' + err.stack || err)
@@ -221,8 +221,7 @@ input {
 <template>
   <body>
     <div class="sch">
-      <a href="/snakecraft">
-        <img class="smowl" src="/img/Snakecraft-Hosting.png" alt="sch logo" /></a
+      <a href="/snakecraft"> <img class="smowl" src="/img/Snakecraft-Hosting.png" alt="sch logo" /></a
       ><a href="https://www.mcstatusbot.site/snakecraft?ref=home-page">Hosted by Snakecraft Hosting</a>
     </div>
     <div :class="[me.options.darkMode ? 'dark' : '', 'home']">

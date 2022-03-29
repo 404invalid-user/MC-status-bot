@@ -1,8 +1,8 @@
 const path = require('path')
 module.exports = {
-    path: '/dashboard',
+  path: '/dashboard',
 
-    run(shards, req, res) {
-        return res.sendFile(path.join(__dirname, '/../../www/index.html'))
-    }
+  run(shards, req, res) {
+    return res.sendFile(path.join(__dirname, '/../../www/index.html'))
+  }
 }

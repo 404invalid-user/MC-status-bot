@@ -34,7 +34,7 @@ export default {
     await axios
       .get('/api/me')
       .then((response) => {
-        this.me = response.data.data;
+        this.me = response.data.data
       })
       .catch((e) => {
         console.log('[/api/me]: ' + e.stack || e)
@@ -64,7 +64,7 @@ export default {
     await axios
       .get('/api/server?id=' + this.$route.params.guildid)
       .then((res) => {
-        this.server = res.data.data;
+        this.server = res.data.data
       })
       .catch((err) => {
         console.log('[/api/server]: ' + err.stack || err)
