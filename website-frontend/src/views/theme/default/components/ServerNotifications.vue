@@ -4,7 +4,9 @@
 export default {
   name: 'ServerNotification',
   data() {
-    return {}
+    return {
+      currentEmail: ''
+    }
   },
   props: {
     me: Object,
@@ -15,6 +17,7 @@ export default {
     errorInput(inputid, text, time) {
       document.getElementById(inputid).classList.add('error')
       document.getElementById(inputid + '-text').innerText = text
+      return false;
     },
     validateContent(id, le) {
       const value = document.getElementById(id).value
@@ -25,6 +28,7 @@ export default {
       } else {
         document.getElementById(id).classList.remove('error')
         document.getElementById(id + '-text').innerText = ''
+        return true;
       }
     },
     validateUrl(id) {
@@ -36,11 +40,26 @@ export default {
       }
       document.getElementById(id).classList.remove('error')
       document.getElementById(id + '-text').innerText = ''
+    },
+    deleteEmail(email) {
+      for (let i = 0; i < this.server.config.notifications.email.emails.length; i++) {
+        if (this.server.config.notifications.email.emails[i] == email) {
+          this.server.config.notifications.email.emails.splice(i, 1)
+        }
+      }
+
+    },
+    addEmail() {
+      //TODO: check email format
+      if (this.validateContent('email-to', 390)) {
+this.server.config.notifications.email.emails.push(this.currentEmail.toLowerCase());
+      this.currentEmail = ''
+      } 
+      
     }
   },
 
-  async beforeMount() {
-  }
+  async beforeMount() {}
 }
 </script>
 
@@ -127,6 +146,10 @@ p {
   color: white;
 }
 
+.subtitle {
+  font-size: 1.2em;
+}
+
 .button-server {
   display: flex;
   align-items: center;
@@ -168,13 +191,23 @@ p.error {
       <a href="http://docs.mcstatusbot.site/variables/notifications" target="_blank">docs.mcstatusbot.site/variables/notifications</a>
     </p>
 
-    <p>
+    <p class="subtitle">
       <b>{{ translate('Webhook') }}:</b>
     </p>
     <div class="bruh" style="margin-top: 0">
       <p>{{ translate('Enabled') }}:</p>
       <label class="switch">
         <input type="checkbox" v-model="server.config.notifications.webhook.enabled" />
+        <span class="slider"></span>
+      </label>
+       <p>{{ translate('Send Status when server online') }}:</p>
+      <label class="switch">
+        <input type="checkbox" v-model="server.config.notifications.webhook.for.online" />
+        <span class="slider"></span>
+      </label>
+        <p>{{ translate('Send Status when server offline') }}:</p>
+      <label class="switch">
+        <input type="checkbox" v-model="server.config.notifications.webhook.for.offline" />
         <span class="slider"></span>
       </label>
       <div>
@@ -190,29 +223,7 @@ p.error {
       </div>
     </div>
 
-    <p>
-      <b>{{ translate('bot') }}:</b>
-    </p>
-    <div class="bruh" style="margin-top: 0">
-      <p>{{ translate('Enabled') }}:</p>
-      <label class="switch">
-        <input type="checkbox" v-model="server.config.notifications.bot.enabled" />
-        <span class="slider"></span>
-      </label>
-      <div>
-        <p>{{ translate('Channel') }}:</p>
-        <input type="text" id="bot-channel" v-model="server.config.notifications.bot.channel" @input="validateContent('bot-channel', 18)" />
-        <p class="error" id="bot-channel-text"></p>
-      </div>
-
-      <div>
-        <p>{{ translate('Content') }}:</p>
-        <input type="text" id="bot-content" v-model="server.config.notifications.bot.content" @input="validateContent('bot-content')" />
-        <p class="error" id="bot-content-text"></p>
-      </div>
-    </div>
-
-    <p>
+    <p class="subtitle">
       <b>{{ translate('Email') }}:</b>
     </p>
     <div class="bruh" style="margin-top: 0">
@@ -221,10 +232,26 @@ p.error {
         <input type="checkbox" v-model="server.config.notifications.email.enabled" />
         <span class="slider"></span>
       </label>
+       <p>{{ translate('Send Status when server online') }}:</p>
+      <label class="switch">
+        <input type="checkbox" v-model="server.config.notifications.email.for.online" />
+        <span class="slider"></span>
+      </label>
+        <p>{{ translate('Send Status when server offline') }}:</p>
+      <label class="switch">
+        <input type="checkbox" v-model="server.config.notifications.email.for.offline" />
+        <span class="slider"></span>
+      </label>
       <div>
-        <p>{{ translate('Send to email') }}:</p>
-        <input type="email" id="email-to" v-model="server.config.notifications.email.to" />
+        <p>{{ translate('Send to emails') }}:</p>
+        <div class="emails">
+          <div v-for="email of server.config.notifications.email.emails" :key="email" @click="deleteEmail(email)">{{email}}</div>
+        </div>
+        <input type="email" id="email-to" v-model="currentEmail" />
         <p class="error" id="email-to-text"></p>
+        <div class="buttons">
+        <div class="button"  @click="addEmail">{{ translate('Add email') }}</div>
+        </div>
       </div>
       <div>
         <p>{{ translate('Subject') }}:</p>

@@ -17,7 +17,7 @@ export default {
           if (this.message.show) {
             this.loadingWidth = '100%'
           } else {
-               this.loadingWidth = i.toString() + '0%';
+            this.loadingWidth = i.toString() + '0%'
           }
         }, parseInt('1' + i + '00'))
       }
@@ -31,7 +31,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url(http://bisot.xyz/!invalid-user/AJZDrqgxG.jpg);
+  background-image: url('~@/../public/img/background_light.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -63,4 +63,3 @@ body {
     </div>
   </body>
 </template>
-

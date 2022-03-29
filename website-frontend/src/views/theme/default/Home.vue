@@ -30,7 +30,7 @@ export default {
       axios
         .get('/api/languages')
         .then((response) => {
-          this.languages = response.data.lans
+          this.languages = response.data.data;
         })
         .catch((err) => {
           console.log('[/api/languages]: ' + err.stack || err)
@@ -74,7 +74,7 @@ export default {
   min-height: 100%;
   background-color: wheat;
   font-family: 'Ubuntu', sans-serif;
-  background-image: url(http://bisot.xyz/!invalid-user/AJZDrqgxG.jpg);
+  background-image: url('~@/../public/img/background_light.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -84,7 +84,7 @@ export default {
 }
 .home.dark {
   background-color: rgb(24, 19, 12);
-  background-image: url(http://bisot.xyz/!invalid-user/EtgxHbkYG.jpg);
+  background-image: url('~@/../public/img/background_dark.jpg');
   color: #ffffff;
 }
 
@@ -222,8 +222,8 @@ input {
   <body>
     <div class="sch">
       <a href="/snakecraft">
-        <img class="smowl" src="https://cdn.discordapp.com/attachments/742091642726645930/907129450838253578/Snakecraft-Hosting-T-Shirt-NO-TEXT-v2.png" alt="sch logo" /></a
-      ><a href="/snakecraft">Hosted by Snakecraft Hosting</a>
+        <img class="smowl" src="/img/Snakecraft-Hosting.png" alt="sch logo" /></a
+      ><a href="https://www.mcstatusbot.site/snakecraft?ref=home-page">Hosted by Snakecraft Hosting</a>
     </div>
     <div :class="[me.options.darkMode ? 'dark' : '', 'home']">
       <div id="lan-menu">
@@ -240,9 +240,9 @@ input {
         <a :class="[me.options.darkMode ? 'dark' : '', 'button button-big']" @click="quickStatus"
           >{{ translate('Quick status for') }} <input type="text" v-model="serverip" placeholder="snekmc.schost.us" v-on:click.stop
         /></a>
-        <a :class="[me.options.darkMode ? 'dark' : '', 'button button-big']">{{ translate('Support Server') }}</a>
+        <a href="https://www.mcstatusbot.site/discord?ref=site-home" :class="[me.options.darkMode ? 'dark' : '', 'button button-big']">{{ translate('Support Server') }}</a>
         <router-link to="/about" :class="[me.options.darkMode ? 'dark' : '', 'button button-big']">{{ translate('README (about)') }}</router-link>
-        <a :to="bot.github" :class="[me.options.darkMode ? 'dark' : '', 'button button-big']">{{ translate('Github') }}</a>
+        <a href="https://github.com/404invalid-user/MC-status-bot/" :class="[me.options.darkMode ? 'dark' : '', 'button button-big']">{{ translate('Github') }}</a>
         <div class="btn-options">
           <a :class="[me.options.darkMode ? 'dark' : '', 'button o']" @click="openLanMenu">🌎</a>
           <a :class="[me.options.darkMode ? 'dark' : '', 'button']">{{ translate('Options') }}</a>

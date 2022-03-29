@@ -59,26 +59,29 @@ export default {
       axios
         .post('/api/server', { data: this.server })
         .then((r) => {
-          this.sendMessage('server saved')
-        }).catch(({ response }) => { 
-          if (response.status == 400) {
-            return this.sendErrorMessage('Error: saving server, ' + response.data.error + '\nReport ID: ' + response.data.errorid);
+          if (r.data.message == '200400: success with errors') {
+            this.sendMessage('server saved with errors id: ' + r.data.errorid)
           }
-             this.sendErrorMessage('Error: there was an error saving the server\nReport ID: ' + response.data.errorid)
-     })
+        })
+        .catch(({ response }) => {
+          if (response.status == 400) {
+            return this.sendErrorMessage('Error: saving server, ' + response.data.error + '\nReport ID: ' + response.data.errorid)
+          }
+          this.sendErrorMessage('Error: there was an error saving the server\nReport ID: ' + response.data.errorid)
+        })
     },
     saveProfile() {
       axios
         .post('/api/me', { data: this.server })
         .then((r) => {
           this.sendMessage('Profile saved')
-        }).catch(({ response }) => { 
+        })
+        .catch(({ response }) => {
           if (response.status == 400) {
-            return this.sendErrorMessage('Error: saving profile, ' + response.data.error + '\nReport ID: ' + response.data.errorid);
+            return this.sendErrorMessage('Error: saving profile, ' + response.data.error + '\nReport ID: ' + response.data.errorid)
           }
-             this.sendErrorMessage('Error: there was an error saving your profile\nReport ID: ' + response.data.errorid)
-   
-     })
+          this.sendErrorMessage('Error: there was an error saving your profile\nReport ID: ' + response.data.errorid)
+        })
     }
   }
 }
@@ -102,7 +105,7 @@ body {
   height: 100%;
   background-color: rgb(24, 19, 12);
   font-family: 'Ubuntu', sans-serif;
-  background-image: url(http://bisot.xyz/!invalid-user/AJZDrqgxG.jpg);
+  background-image: url('~@/../public/img/background_light.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -111,7 +114,7 @@ body {
   color: #333;
 }
 .home.dark {
-  background-image: url(http://bisot.xyz/!invalid-user/EtgxHbkYG.jpg);
+  background-image: url('~@/../public/img/background_dark.jpg');
   color: #ffffff;
 }
 
@@ -127,7 +130,7 @@ h1 {
   min-width: 100%;
   background-color: rgb(44, 35, 22);
   bottom: 0;
-  background-image: url('http://bisot.xyz/!invalid-user/ropfqInMY.png');
+  background-image: url('~@/../public/img/dashboard_background_light.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;

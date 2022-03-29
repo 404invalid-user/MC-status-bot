@@ -18,10 +18,10 @@ export default {
     validateIp(id) {
       //lmo yeah ima just see if it has .
       const value = document.getElementById(id).value
-      if(!value.includes('.')) {
+      if (!value.includes('.')) {
         return this.errorInput(id, 'Error: ip/domain appears to be incorrect.')
       }
-         document.getElementById(id).classList.remove('error')
+      document.getElementById(id).classList.remove('error')
       document.getElementById(id + '-txt').innerText = ''
     },
     validateContent(id, le) {
@@ -29,7 +29,7 @@ export default {
       if (value.split('').length > le ? le : 2000) {
         return this.errorInput(id, 'Error: too long ' + value.split('').length + ' over ' + le ? le : 2000 + '.')
       }
-         document.getElementById(id).classList.remove('error')
+      document.getElementById(id).classList.remove('error')
       document.getElementById(id + '-text').innerText = ''
     },
     validateUrl(id) {
@@ -169,14 +169,14 @@ p .error {
 <template>
   <div class="bruh">
     <div>
-    <p>{{ translate('Server name') }}:</p>
-    <input type="text" v-model="server.name" disabled id="server-name"/>
-    <p class="error" id="server-name-text"></p>
+      <p>{{ translate('Server name') }}:</p>
+      <input type="text" v-model="server.name" disabled id="server-name" />
+      <p class="error" id="server-name-text"></p>
     </div>
     <div>
-    <p>{{ translate('Server IP') }}:</p>
-    <input type="text" v-model="server.IP" id="server-ip" @input="validateIp('server-ip')"/>
-    <p class="error" id="server-ip-text"></p>
+      <p>{{ translate('Server IP') }}:</p>
+      <input type="text" v-model="server.IP" id="server-ip" @input="validateIp('server-ip')" />
+      <p class="error" id="server-ip-text"></p>
     </div>
     <p>{{ translate('Logging') }}:</p>
     <label class="switch">
@@ -186,13 +186,9 @@ p .error {
     <p>{{ translate('Timezone') }}:</p>
     <input list="timezone" v-model="server.timezone" />
     <datalist id="timezone">
-      <option
-        v-for="timezone of timezones"
-        :key="timezone"
-        :value="timezone"
-      ></option>
+      <option v-for="timezone of timezones" :key="timezone" :value="timezone"></option>
     </datalist>
-   
+
     <p>{{ translate('Bedrock') }}:</p>
     <label class="switch">
       <input type="checkbox" v-model="server.Bedrock" />

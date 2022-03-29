@@ -35,7 +35,7 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #6d6d6d;
-  background-image: url(http://bisot.xyz/!invalid-user/eSNiRZGbF.jpeg);
+  background-image: url('~@/../public/img/stone-light.webp');
   background-repeat: no-repeat;
   width: 213px;
   margin: 10px;
@@ -66,7 +66,7 @@ body {
   border: 3px solid black;
 }
 .button.inactive {
-  background-image: url(http://bisot.xyz/!invalid-user/XIDJAFqhn.png);
+  background-image: url('../public/img/stone-dark.png');
   color: #adadad;
   box-shadow: inset 2px 3px 1px 1px rgb(167 167 167);
 }

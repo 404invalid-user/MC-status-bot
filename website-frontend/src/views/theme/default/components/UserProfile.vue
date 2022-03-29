@@ -17,7 +17,7 @@ export default {
     axios
       .get('/api/languages')
       .then((response) => {
-        this.languages = response.data.lans
+        this.languages = response.data.data
       })
       .catch((err) => {
         console.log('[/api/languages]: ' + err.stack || err)
@@ -146,6 +146,11 @@ p {
     <select v-model="me.lan">
       <option v-for="lan of languages" :key="lan.iso" :value="lan.iso">{{ lan.flag }} - {{ lan.iso }}</option>
     </select>
+     <p>{{ translate('Dark Mode') }}:</p>
+    <label class="switch">
+      <input type="checkbox" v-model="me.options.darkMode" />
+      <span class="slider"></span>
+    </label>
     <p>{{ translate('Admin') }}:</p>
     <label class="switch">
       <input type="checkbox" v-model="me.admin" disabled />

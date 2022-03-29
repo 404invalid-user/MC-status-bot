@@ -17,7 +17,7 @@ export default {
   props: {
     bot: Object,
     me: Object,
-    translate: Function,
+    translate: Function
   },
   methods: {
     select(id) {
@@ -72,7 +72,7 @@ export default {
   height: 100vh;
   max-height: 100%;
   background-color: rgb(24, 19, 12);
-  background-image: url('http://bisot.xyz/!invalid-user/gBnlDGsOR.png');
+  background-image: url('../../../../public/img/dashboard_background_dark.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -88,7 +88,7 @@ export default {
   min-width: 100%;
   background-color: rgb(44, 35, 22);
   top: 0;
-  background-image: url('http://bisot.xyz/!invalid-user/ropfqInMY.png');
+  background-image: url('../../../../public/img/dashboard_background_light.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -107,7 +107,7 @@ h1 {
   min-width: 100%;
   background-color: rgb(44, 35, 22);
   bottom: 0;
-  background-image: url('http://bisot.xyz/!invalid-user/ropfqInMY.png');
+  background-image: url('~@/../public/img/dashboard_background_light.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -225,7 +225,7 @@ img.ping {
           @mouseover="hover(server._id)"
           @mouseleave="remHover(server._id)"
         >
-          <div class="image" :style="{ backgroundImage: `url(${server.icon && server.icon !== null && server.icon != undefined ? server.icon : '/down.png'})` }">
+          <div class="image" :style="{ backgroundImage: `url(${server.icon && server.icon !== null && server.icon != undefined ? server.icon : '/img/down.png'})` }">
             <div class="hover"></div>
           </div>
           <div class="text">
@@ -236,7 +236,7 @@ img.ping {
             <div class="signal-top">
               <span class="online">{{ server.pinger.members }}</span
               ><span class="slash">/</span><span class="max">{{ server.pinger.maxMembers }}</span
-              ><img :src="server.pinger.status == 'online' ? 'signal.png' : 'no-signal.png'" class="ping" />
+              ><img :src="server.pinger.status == 'online' ? '/img/signal.png' : '/img/no-signal.png'" class="ping" />
             </div>
           </div>
         </div>
