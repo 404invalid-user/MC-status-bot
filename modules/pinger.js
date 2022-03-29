@@ -32,6 +32,18 @@ module.exports = {
     const servers = await getallCache('Server')
     for (const server of servers) {
       if (!server.IP) continue
+      if (!server.checker) {
+        server.checker = {
+          channel: {
+            status: 'offline',
+            members: '0'
+          },
+          notification: {
+            status: 'offline',
+            members: '0'
+          }
+        }
+      }
 
       const ip = server.IP.split(':')[0]
       const portnum = parseInt(server.IP.split(':')[1])

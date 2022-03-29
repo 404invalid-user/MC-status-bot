@@ -50,7 +50,7 @@ module.exports = {
           commandName +
           '` from now on.\nIf you cant see any commands in the menu please kick then add the bot with this link https://discord.com/oauth2/authorize?client_id=816747912888975362&permissions=269798480&scope=bot%20applications.commands'
       )
-      command.execute(message, args, server, client)
+      //command.execute(message, args, server, client)
     } catch (error) {
       logger.error(error.stack || error)
       message.reply({

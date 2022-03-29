@@ -66,9 +66,19 @@ module.exports = {
       } else {
         await client.channels.cache.get(NumberChan.id).setName(`👥 ${await translate(server.lan, 'Players Online')}: disabled`)
       }
-      server.pinger = {
+      server['pinger'] = {
         status: 'online',
         members: result.players.online
+      }
+      server['checker'] = {
+        channel: {
+          status: 'online',
+          members: result.players.online
+        },
+        notification: {
+          status: 'online',
+          members: result.players.online
+        }
       }
     }
     async function servoffline() {
@@ -78,9 +88,19 @@ module.exports = {
       } else {
         await client.channels.cache.get(NumberChan.id).setName(`👥 ${await translate(server.lan, 'Players Online')}: disabled`)
       }
-      server.pinger = {
+      server['pinger'] = {
         status: 'offline',
         members: '0'
+      }
+      server['checker'] = {
+        channel: {
+          status: 'offline',
+          members: '0'
+        },
+        notification: {
+          status: 'offline',
+          members: '0'
+        }
       }
     }
 

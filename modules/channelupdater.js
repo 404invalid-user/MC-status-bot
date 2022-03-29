@@ -3,7 +3,7 @@ module.exports = async (client, server) => {
   // Check if channels are defined
   if (!server.StatusChannId || !server.CategoryId) return
   if (!server.pinger) return
-  if (!server.channel) {
+  if (!server.checker.channel) {
     server.checker['channel'] = {
       status: server.pinger.status,
       members: server.pinger.members
