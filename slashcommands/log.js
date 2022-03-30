@@ -16,7 +16,7 @@ module.exports = {
     let replyContent = ''
     // Check if the person is admin
     if (!interaction.member.permissions.has('MANAGE_GUILD') && interaction.member.id != process.env.OWNERID) {
-      replyContent = await translate(server.lan, 'You have to be a admin to use this command!')
+      replyContent = await translate(server.lan, 'You need the `MANAGE_GUILD` permission to use this command!')
       return interaction.reply(replyContent)
     }
     args = interaction.options.getString('value')

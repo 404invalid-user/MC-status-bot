@@ -9,7 +9,7 @@ module.exports = {
   execute(message, args, server) {
     // Check if the person is admin
     if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && message.member.id != process.env.OWNERID.toString()) {
-      message.channel.send('You have to be a admin to use this command!')
+      message.channel.send('You need the `MANAGE_GUILD` permission to use this command!')
       return
     }
 
