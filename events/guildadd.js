@@ -10,6 +10,16 @@ module.exports = {
   async addGuild(guild) {
     Server.create({
       _id: guild,
+      checker: {
+        channel: {
+          status: 'offline',
+          members: '0'
+        },
+        notification: {
+          status: 'offline',
+          members: '0'
+        }
+      },
       config: {
         notifications: {
           webhook: {

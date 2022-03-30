@@ -23,19 +23,19 @@ module.exports = {
     await interaction.deferReply()
     const chartType = interaction.options.getString('type')
     if (!chartType) {
-      return interaction.reply(await translate(server.lan, 'Please specify what you want to chart! Use `/chart uptime`, `/chart playersonline` or `/chart mostactive`'))
+      return interaction.editReply(await translate(server.lan, 'Please specify what you want to chart! Use `/chart uptime`, `/chart playersonline` or `/chart mostactive`'))
     }
 
     // Get the ip. data.IP holds the ip
     if (!server.Logging) {
-      return interaction.reply(await translate(server.lan, 'This server has logging set to off. please ask an admin to do `/log value: on`'))
+      return interaction.editReply(await translate(server.lan, 'This server has logging set to off. please ask an admin to do `/log value: on`'))
     }
     // Get the logs
     const logsraw = await lookup('Log', message.guild.id)
     const logs = logsraw.logs
     // Check if logs exist
     if (logs.length <= 1 || logs == null || !server.IP) {
-      return interaction.reply(await translate(server.lan, "This server doesn't have any logs, please wait for them to update!"))
+      return interaction.editReply(await translate(server.lan, "This server doesn't have any logs, please wait for them to update!"))
     }
 
     //type of grapgh to show
@@ -262,6 +262,6 @@ module.exports = {
     // Send embed
     const attachment = new Discord.MessageAttachment(image, 'chart.png')
     const embed = new Discord.MessageEmbed().setColor(embedColour).setTitle(embedTitle).setDescription(embedDescription).setImage('attachment://chart.png')
-    interaction.reply({ embeds: [embed], files: [attachment] })
+    interaction.editReply({ embeds: [embed], files: [attachment] })
   }
 }

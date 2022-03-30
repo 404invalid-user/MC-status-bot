@@ -1,22 +1,20 @@
 const logger = require('../modules/nodeLogger.js')
 module.exports = async (client, server) => {
   // Check if channels are defined
-  if (!server.StatusChannId || !server.CategoryId) return
-  if (!server.pinger) return
-  if (!server.checker.channel) {
-    server.checker['channel'] = {
-      status: server.pinger.status,
-      members: server.pinger.members
-    }
-  } else {
-    if (!server.checker.channel.status) {
-      server.checker.channel.status = server.pinger.status
-    }
-    if (server.MemberChannEnabled) {
-      if (!server.checker.channel.members) {
-        server.checker.channel.members = server.pinger.members
+  if (!server.StatusChannId || !server.CategoryId) return;
+  if (!server.pinger) return;
+  if (!server.checker && !server.checker.channel) {
+    server.checker = {
+      channel: {
+        status: 'offline',
+        members: '0'
+      },
+      notification: {
+        status: 'offline',
+        members: '0'
       }
     }
+    return server.save();
   }
   //channel status does not match pinner value
   if (server.checker.channel.status !== server.pinger.status) {
@@ -26,14 +24,14 @@ module.exports = async (client, server) => {
         .get(server.StatusChannId)
         .setName('🟢 ONLINE')
         .catch((e) => logger.warn('Error in cahannupd:' + e))
-      server.channel.status = 'online'
+      server.checker.channel.status = 'online'
       console.log('settinv chan online')
     } else if (server.pinger.status == 'offline') {
       await client.channels.cache
         .get(server.StatusChannId)
         .setName('🔴 OFFLINE')
         .catch((e) => logger.warn('Error in cahannupd:' + e))
-      server.channel.status = 'offline'
+      server.checker.channel.status = 'offline'
     }
   }
   if (server.MemberChannEnabled) {
@@ -44,5 +42,5 @@ module.exports = async (client, server) => {
       server.checker.channel.members = server.pinger.members
     }
   }
-  server.save()
+  server.save();
 }

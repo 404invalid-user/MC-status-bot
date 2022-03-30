@@ -1,6 +1,7 @@
 const Log = require('../database/logSchema')
 const Server = require('../database/ServerSchema')
-const User = require('../database/user')
+const User = require('../database/user');
+const makeServer = require('../events/guildadd').addGuild;
 
 const util = require('util')
 const mongoose = require('mongoose')
@@ -28,21 +29,21 @@ module.exports = {
     else {
       logger.info(`${key} just fellback to mongo while looking for the ${collection} collection!`)
       if (collection == 'Log') {
-        result = await Log.findById({ _id: key })
+        result = await Log.findOne({ _id: key })
         if (result != null) {
           client.hset(collection, key, JSON.stringify(result))
         }
       } else if (collection == 'Server') {
-        result = await Server.findById({ _id: key })
+        result = await Server.findOne({ _id: key })
         //make doc if it does not exist in mongodb
         if (result == null) {
-          Server.create({ _id: key })
+          await makeServer(key);
         }
-        result = await Server.findById({ _id: key })
+        result = await Server.findOne({ _id: key })
         result._id = undefined // Remove the _id from the value
         client.hset(collection, key, JSON.stringify(result))
       } else if (collection == 'user') {
-        result = await User.findById({ _id: key })
+        result = await User.findOne({ _id: key })
         if (result != null) {
           client.hset(collection, key, JSON.stringify(result))
         }
