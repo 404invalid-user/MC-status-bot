@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
-		"dev": "npx nodemon .",
+		"dev": "",
 		"format": "prettier --write .",
 		"start:pm2": "pm2 start index.js",
 		"stop:pm2": "pm2 kill",
@@ -33,9 +33,13 @@
 		"chalk": "4.1.2",
 		"chart.js": "^3.7.0",
 		"chartjs-node-canvas": "^4.1.5",
+		"chartjs-plugin-datalabels": "^2.0.0",
+		"discord-bitfield-calculator": "^1.0.0",
 		"discord.js": "^13.5.0",
 		"discord.js-rate-limiter": "^1.2.3",
 		"dotenv": "^14.3.2",
+		"express": "^4.17.3",
+		"express-rate-limit": "^6.3.0",
 		"fast-xml-parser": "^4.0.0-beta.8",
 		"ioredis": "^4.28.2",
 		"minecraft-server-util": "^5.2.8",
@@ -43,7 +47,11 @@
 		"mongo-sanitize": "^1.1.0",
 		"mongoose": "^6.1.4",
 		"node-cron": "^3.0.0",
-		"topgg-autoposter": "^2.0.1"
+		"nodemailer": "^6.7.2",
+		"puppeteer": "^13.5.1",
+		"randomstring": "^1.2.2",
+		"topgg-autoposter": "^2.0.1",
+		"uniqid": "^5.4.0"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.15",

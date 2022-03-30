@@ -20,10 +20,7 @@ module.exports = {
       '`mc!bug [bug]` - Report a bug in the bot\n' +
       '\n[Invite to a server](https://discord.com/oauth2/authorize?client_id=816747912888975362&scope=bot&permissions=268749904) | [Privacy policy](https://github.com/404invalid-user/MC-status-bot/blob/main/miscellaneous/Privacy_policy.md) | [Github](https://github.com/404invalid-user/MC-status-bot) | [Support server](https://discord.gg/YzX5KdF4kq)'
 
-    const embed = new Discord.MessageEmbed()
-      .setColor('#008000')
-      .setTitle('<a:cube:892129423141269535> About the bot')
-      .setDescription(description)
+    const embed = new Discord.MessageEmbed().setColor('#008000').setTitle('<a:cube:892129423141269535> About the bot').setDescription(description)
     message.channel.send({ embeds: [embed] })
   }
 }

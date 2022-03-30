@@ -1,32 +1,40 @@
-const Discord = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const Discord = require('discord.js')
+const { SlashCommandBuilder } = require('@discordjs/builders')
+const translate = require('../modules/translate')
 module.exports = {
-    name: 'help',
-    data: new SlashCommandBuilder()
-        .setName('help')
-        .setDescription('shows a message to help you use the bot'),
+  name: 'help',
+  data: new SlashCommandBuilder().setName('help').setDescription('shows a message to help you use the bot'),
+  async execute(interaction, server) {
+    const description = `${await translate(
+      server.lan,
+      'Please report any bugs that you encounter on [Github](https://github.com/404invalid-user/MC-status-bot/issues) or [the website](https://www.mcstatusbot.site/bug)!'
+    )}
+**Admin commands:**
+\`/log [on/off]\` - ${await translate(server.lan, 'turn logging on or off.')}
+\`/setup [ip] [bedrock]\` - ${await translate(server.lan, 'set up the channels that will display the status of a selected server.')}
+\`/rmchann\` - ${await translate(server.lan, 'remove the monitoring channels.')}
+**${await translate(server.lan, 'User Commands')}:**
+\`/ip\` - ${await translate(server.lan, 'return the default ip of the server.')}
+\`/ping\` - ${await translate(server.lan, 'ping a minecraft server.')}
+\`/news\` - ${await translate(server.lan, 'see the latest articles from minecraft.net.')}
+\`/chart \` - ${await translate(server.lan, 'make a chart with the logged info.')}
+\`/bug\` - ${await translate(server.lan, 'Report a bug in the bot.')}
 
-    execute(message) {
+[${await translate(server.lan, 'Dashboard')}](https://www.mcstatusbot.site/dashboard) | [${translate(
+      server.lan,
+      'Invite Bot'
+    )}](https://discord.com/oauth2/authorize?client_id=816747912888975362&scope=bot&permissions=268749904) | [${translate(
+      server.lan,
+      'Privacy Policy'
+    )}](https://github.com/404invalid-user/MC-status-bot/blob/main/miscellaneous/Privacy_policy.md) | [${translate(
+      server.lan,
+      'Github'
+    )}](https://github.com/404invalid-user/MC-status-bot) | [${translate(server.lan, 'Support Server')}](https://discord.gg/YzX5KdF4kq)`
 
-        const description = 'Please report any bugs that you encounter on [Github](https://github.com/404invalid-user/MC-status-bot/issues) or use the `mc!bug` command!\n' +
-            "> By putting the word bedrock or just the letter b after an ip the bot will ping this ip using the bedrock protocol.\n\n" +
-            '**Admin commands:**\n' +
-            '`mc!setip [ip] [bedrock]` - set an ip that the bot will monitor\n' +
-            '`mc!log [on/off]` - turn logging on or off\n' +
-            '`mc!setup [ip] [bedrock]` - set up the channels that will display the status of a selected server\n' +
-            '`mc!rmchann` - remove the monitoring channels\n' +
-            '\n**User commands:**\n' +
-            '`mc!ip` - return the default ip of the server\n' +
-            '`mc!ping [ip] [bedrock]` - ping a minecraft server\n' +
-            '`mc!news` - see the latest articles from minecraft.net\n' +
-            '`mc!chart [uptime/playersonline/mostactive]` - make a chart with the logged info\n' +
-            '`mc!bug [bug]` - Report a bug in the bot\n' +
-            '\n[Invite to a server](https://discord.com/oauth2/authorize?client_id=816747912888975362&scope=bot&permissions=268749904) | [Privacy policy](https://github.com/404invalid-user/MC-status-bot/blob/main/miscellaneous/Privacy_policy.md) | [Github](https://github.com/404invalid-user/MC-status-bot) | [Support server](https://discord.gg/YzX5KdF4kq)'
-
-        const embed = new Discord.MessageEmbed()
-            .setColor('#008000')
-            .setTitle('<a:cube:892129423141269535> About the bot')
-            .setDescription(description)
-        message.reply({ embeds: [embed] });
-    }
+    const embed = new Discord.MessageEmbed()
+      .setColor('#008000')
+      .setTitle(`<a:cube:892129423141269535>  ${await translate(server.lan, 'About the bot')}`)
+      .setDescription(description)
+    interaction.reply({ embeds: [embed] })
+  }
 }

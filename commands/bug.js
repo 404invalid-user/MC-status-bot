@@ -1,24 +1,6 @@
-const Discord = require('discord.js')
-
 module.exports = {
   name: 'bug',
-  async execute(message, args, server, client) {
-    const owner = await client.users.fetch(process.env.OWNERID)
-    const bug = args.slice(0).join(' ')
-
-    if (!bug) {
-      message.channel.send('Please specify a bug that you would like to report.')
-    } else {
-      const embed = new Discord.MessageEmbed()
-        .setTitle('New Bug report!')
-        .addField('Author', message.author.toString(), true)
-        .addField('Guild', `name: ${message.guild.name}\nid: ${message.guild.id}`, true)
-        .addField('Report', bug)
-        .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
-        .setTimestamp()
-      owner.send({ embeds: [embed] })
-
-      message.channel.send('Thank You for reporting a bug and helping to improve this bot! Your feedback is greatly appreciated!')
-    }
+  async execute(message) {
+    message.reply('To report a big please first see our Faq at https://docs.mcstatusbot.discord/faq or join our support server https://mcstatusbot.site/discord')
   }
 }

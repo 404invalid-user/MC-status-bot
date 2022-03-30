@@ -18,7 +18,8 @@ module.exports = {
     }
 
     // Get the logs
-    const logs = await lookup('Log', message.guild.id)
+    const logsraw = await lookup('Log', message.guild.id)
+    const logs = logsraw.logs
     // Check if logs exist
     if (logs.length <= 1 || logs == null || !data.IP) {
       message.channel.send("This server doesn't have any logs. Make sure that logging is turned on by using the `mc!log on` command.")
@@ -44,7 +45,6 @@ module.exports = {
 
       var embedDescription = `There have been a maximum of ${Math.max(...yLabels)} players online at once, and a minimum of ${Math.min(...yLabels)}.`
     } else if (args == 'uptime') {
-
       // Set the options for chart.js
       var type = 'line',
         label = 'uptime',

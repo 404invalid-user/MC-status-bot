@@ -1,8 +1,5 @@
-const { lookup } = require('../modules/cache.js')
-
 module.exports = {
   name: 'ip',
-
   async execute(message, args, data) {
     // Fetch data from db
     // By using redis caching this function's execution time dropped from a average of 29ms to less then one

@@ -8,7 +8,7 @@ services:
     ports:
       - 27017-27019:27017-27019
     volumes:
-      - database:/bot
+      - database:/mcstatus
 
   cache:
     image: redis
@@ -25,6 +25,8 @@ services:
     depends_on:
       - database
       - cache
+    ports:
+      - '5000:5000'
 
 volumes:
   database:

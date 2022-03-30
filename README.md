@@ -16,39 +16,38 @@ Create graphs, and log the status of a server:
 ### :arrow_right: **[Add this bot to your server](https://discord.com/oauth2/authorize?client_id=816747912888975362&permissions=269798480&scope=bot%20applications.commands)**
 
 ## *Commands*
-By putting the word 'bedrock' or just the letter 'b' the bot will ping this ip using the bedrock protocol.
-
-<br>
 
 **Admin command:**
 
-`mc!log [on/off]` Turn logging on or off. 
+`/language` change the bots language.
 
-`mc!setip [ip] [bedrock]` Set the ip that will be monitored. You can use this command to change the ip at any time.
+`/log` Turn logging on or off. 
 
-`mc!setup [ip] [bedrock]` Create the two channels that will display the server status.
+`/setip` Set the ip that will be monitored. You can use this command to change the ip at any time.
 
-`mc!rmchann` Removes the monitoring channels
+`/setup` Create the two channels that will display the server status.
+
+`/rmchann` Removes the monitoring channels
 
 <br>
 
 **Normal commands:**
 
-`mc!help` List all the commands and what they do.
+`/help` List all the commands and what they do.
 
-`mc!ping [ip] [bedrock]` Ping a specified ip. You can use the command with no arguments to ping the ip specified by using the `mc!setip` command.
+`/ping` Ping a specified ip. You can use the command with no arguments to ping the ip specified by using the `/setip` command.
 
-`mc!chart uptime` Create a chart of players online over time on the server.
+`/chart uptime` Create a chart of players online over time on the server.
 
-`mc!chart playersonline` Create a chart of server uptime and calculate the uptime percentage.
+`/chart playersonline` Create a chart of server uptime and calculate the uptime percentage.
 
-`mc!chart mostactive` Create a bar chart with the number of minutes each player spent on th server.
+`/chart mostactive` Create a bar chart with the number of minutes each player spent on th server.
 
-`mc!news` Get the latest articles from minecraft.net
+`/news` Get the latest articles from minecraft.net
 
-`mc!ip` Return the default ip of the guild
+`/ip` Return the default ip of the guild
 
-`mc!bug` Report a bug in the bot
+`/bug` Report a bug in the bot
 
 <br>
 
@@ -84,3 +83,9 @@ retired/inactive:
 
 * Read the privacy policy [here.](https://github.com/404invalid-user/MC-status-bot/blob/main/miscellaneous/Privacy_policy.md)
 * The profile picture for this bot is based on the computer from the [ComputerCraft mod](https://www.computercraft.info/). The original picture can be found [here](https://feed-the-beast.fandom.com/wiki/ComputerCraft?file=Iso_Computer.png). The original image is licensed under the Creative Commons Attribution-Share Alike License, thus the [modified image](https://github.com/404invalid-user/MC-status-bot/blob/main/miscellaneous/icon.png) is licensed under the same [license](https://creativecommons.org/licenses/by-sa/3.0/).
+
+
+## build
+
+
+go to [/build.md](/build.md)

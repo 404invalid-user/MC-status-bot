@@ -1,6 +1,6 @@
-const util = require('minecraft-server-util');
-const Discord = require('discord.js');
-const logger = require('../modules/nodeLogger.js');
+const util = require('minecraft-server-util')
+const Discord = require('discord.js')
+const logger = require('../modules/nodeLogger.js')
 
 module.exports = {
   name: 'ping',
@@ -28,27 +28,29 @@ module.exports = {
       var pinger = util.status(ip.split(':')[0].toLowerCase(), port ? port : 25565)
     }
 
-    pinger.then((result) => {
-      if (result.version.protocol) online(result)
-      else offline(`${ip} didn't return a ping.`, ip)
-    }).catch((error) => {
-      if (error.code == 'ENOTFOUND') offline(`Unable to resolve ${ip}.\nCheck if you entered the correct ip!`, ip)
-      else if (error.code == 'ECONNREFUSED') offline(`Unable to resolve ${ip}.\nCan't find a route to the host!`, ip)
-      else if (error.code == 'EHOSTUNREACH') offline(`${ip} refused to connect.\nCheck if you specified the correct port!`, ip)
-      else if (error.code == 'ECONNRESET') offline(`${ip} abruptly closed the connection.\nThere is some kind of issue on the server side!`, ip)
-      else if (error == 'Error: Timed out while retrieving server status') offline(`${ip} didn't return a ping.\nTimed out.`, ip)
-      else {
-        logger.error('A error occurred while trying to ping: ' + error.stack || error)
-        offline(`${ip} refused to connect.`, ip)
-      }
-      return;
-    })
+    pinger
+      .then((result) => {
+        if (result.version.protocol) online(result)
+        else offline(`${ip} didn't return a ping.`, ip)
+      })
+      .catch((error) => {
+        if (error.code == 'ENOTFOUND') offline(`Unable to resolve ${ip}.\nCheck if you entered the correct ip!`, ip)
+        else if (error.code == 'ECONNREFUSED') offline(`Unable to resolve ${ip}.\nCan't find a route to the host!`, ip)
+        else if (error.code == 'EHOSTUNREACH') offline(`${ip} refused to connect.\nCheck if you specified the correct port!`, ip)
+        else if (error.code == 'ECONNRESET') offline(`${ip} abruptly closed the connection.\nThere is some kind of issue on the server side!`, ip)
+        else if (error == 'Error: Timed out while retrieving server status') offline(`${ip} didn't return a ping.\nTimed out.`, ip)
+        else {
+          logger.error('A error occurred while trying to ping: ' + error.stack || error)
+          offline(`${ip} refused to connect.`, ip)
+        }
+        return
+      })
 
     // Server is online
     function online(result) {
       // If there is no icon use pack.png
       if (result.favicon == null) {
-        var attachment = new Discord.MessageAttachment('https://i.ibb.co/YkRLWG8/down.png', 'icon.png')
+        var attachment = new Discord.MessageAttachment('https://www.mcstatusbot.site/img/down.png', 'icon.png')
       } else {
         var attachment = new Discord.MessageAttachment(Buffer.from(result.favicon.substr('data:image/png;base64,'.length), 'base64'), 'icon.png')
       }
@@ -63,21 +65,22 @@ module.exports = {
         embed.addField('Players connected:', '`' + playernames.toString().replace(/,/g, ', ') + '`', false)
       }
 
-      embed.addFields(
-        {
-          name: 'Players: ',
-          value: 'Online: ' + '`' + result.players.online + '`' + '\nMax: ' + '`' + result.players.max + '`',
-          inline: true
-        },
-        {
-          name: 'Version: ',
-          value: '`' + result.version.name + '`',
-          inline: true
-        }
-      ).setThumbnail('attachment://icon.png')
+      embed
+        .addFields(
+          {
+            name: 'Players: ',
+            value: 'Online: ' + '`' + result.players.online + '`' + '\nMax: ' + '`' + result.players.max + '`',
+            inline: true
+          },
+          {
+            name: 'Version: ',
+            value: '`' + result.version.name + '`',
+            inline: true
+          }
+        )
+        .setThumbnail('attachment://icon.png')
 
       return message.channel.send({ embeds: [embed], files: [attachment] })
-
     }
 
     // Server is offline or error
@@ -86,7 +89,7 @@ module.exports = {
         .setColor('#FF0000')
         .setTitle(`${ip} is offline`)
         .setDescription(errortxt + '\n\n *If the server you are trying to ping\n is a bedrock server use `mc!ping [ip] bedrock`*')
-        .setThumbnail('https://i.ibb.co/YkRLWG8/down.png')
+        .setThumbnail('https://www.mcstatusbot.site/img/down.png')
       message.channel.send({ embeds: [embed] })
       return
     }
