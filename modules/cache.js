@@ -1,7 +1,7 @@
 const Log = require('../database/logSchema')
 const Server = require('../database/ServerSchema')
-const User = require('../database/user');
-const makeServer = require('../events/guildadd').addGuild;
+const User = require('../database/user')
+const makeServer = require('../events/guildadd').addGuild
 
 const util = require('util')
 const mongoose = require('mongoose')
@@ -37,7 +37,7 @@ module.exports = {
         result = await Server.findOne({ _id: key })
         //make doc if it does not exist in mongodb
         if (result == null) {
-          await makeServer(key);
+          await makeServer(key)
         }
         result = await Server.findOne({ _id: key })
         result._id = undefined // Remove the _id from the value

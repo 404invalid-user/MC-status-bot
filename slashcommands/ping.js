@@ -63,7 +63,7 @@ module.exports = {
     async function online(result) {
       // If there is no icon use pack.png
       if (result.favicon == null) {
-        var attachment = new Discord.MessageAttachment('https://www.mcstatusbot.site/img/down.png', 'icon.png').catch((e) => {})
+        var attachment = new Discord.MessageAttachment('https://www.mcstatusbot.site/img/down.png', 'icon.png')
       } else {
         var attachment = new Discord.MessageAttachment(Buffer.from(result.favicon.substr('data:image/png;base64,'.length), 'base64'), 'icon.png')
       }

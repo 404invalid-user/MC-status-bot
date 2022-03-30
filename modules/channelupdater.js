@@ -1,8 +1,8 @@
 const logger = require('../modules/nodeLogger.js')
 module.exports = async (client, server) => {
   // Check if channels are defined
-  if (!server.StatusChannId || !server.CategoryId) return;
-  if (!server.pinger) return;
+  if (!server.StatusChannId || !server.CategoryId) return
+  if (!server.pinger) return
   if (!server.checker && !server.checker.channel) {
     server.checker = {
       channel: {
@@ -14,7 +14,7 @@ module.exports = async (client, server) => {
         members: '0'
       }
     }
-    return server.save();
+    return server.save()
   }
   //channel status does not match pinner value
   if (server.checker.channel.status !== server.pinger.status) {
@@ -42,5 +42,5 @@ module.exports = async (client, server) => {
       server.checker.channel.members = server.pinger.members
     }
   }
-  server.save();
+  server.save()
 }

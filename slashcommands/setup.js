@@ -15,7 +15,7 @@ module.exports = {
     await interaction.deferReply()
     // Check if the person is admin
     if (!interaction.member.permissions.has('MANAGE_GUILD') && interaction.member.id != process.env.OWNERID)
-      return interaction.editReply('You have to be a admin to use this command!')
+      return interaction.editReply('You need the `MANAGE_GUILD` permission to use this command!')
 
     try {
       const ip = interaction.options.getString('ip').toString().toLowerCase()
