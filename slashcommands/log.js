@@ -33,33 +33,15 @@ module.exports = {
 
     server.save()
 
-    if (logging == true) {
-      // Create a log document
-      Log.findByIdAndUpdate(
-        {
-          _id: interaction.guild.id
-        },
-        {
-          logs: []
-        },
-        {
-          useFindAndModify: false,
-          new: true,
-          upsert: true
-        }
-      )
-        .cache()
-        .catch((err) => {
-          // This code means that the document already exists. We can just ignore this since no new document is created
-          if (!err.code == 11000) {
-            console.error(err)
-          }
-        })
-        .then(async (e) => {
-          replyContent = `${await translate(server.lan, 'Logging has been turned')} ${await translate(server.lan, 'on')}`
-          interaction.reply(replyContent)
-        })
-    } else if (logging == false) {
+    if (server.logging == true) {
+      const logs = await cache.lookup('Log', interaction.guild.id)
+      if (logs !== null) {
+        logs.logs = [];
+        logs.save();
+      }
+      replyContent = `${await translate(server.lan, 'Logging has been turned')} ${await translate(server.lan, 'on')}`
+      interaction.reply(replyContent)
+    } else if (server.logging == false) {
       Log.findOneAndRemove(
         {
           _id: interaction.guild.id

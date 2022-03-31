@@ -1,6 +1,6 @@
 {
 	"name": "mc-server-status-bot",
-	"version": "1.0.0",
+	"version": "2.3.4",
 	"description": "A discord bot that displays if a MC server is online",
 	"main": "index.js",
 	"scripts": {

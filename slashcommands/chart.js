@@ -31,7 +31,7 @@ module.exports = {
       return interaction.editReply(await translate(server.lan, 'This server has logging set to off. please ask an admin to do `/log value: on`'))
     }
     // Get the logs
-    const logsraw = await lookup('Log', message.guild.id)
+    const logsraw = await lookup('Log', interaction.guild.id)
     const logs = logsraw.logs
     // Check if logs exist
     if (logs.length <= 1 || logs == null || !server.IP) {

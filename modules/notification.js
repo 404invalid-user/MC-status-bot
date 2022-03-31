@@ -1,7 +1,8 @@
 const axios = require('axios')
 const email = require('./email')
+const conf = require('../config')
 module.exports = async (status, server) => {
-  console.log('running nitification')
+  if (conf.debug) console.log('running nitification')
 
   if (server.config.notifications) return
   console.log('has notification config')
@@ -12,13 +13,13 @@ module.exports = async (status, server) => {
       members: '0'
     }
   }
-  console.log('checker:: ' + server.checker.notification.status)
-  console.log('pinger: ' + server.pinger.status)
+  if (conf.debug)console.log('checker:: ' + server.checker.notification.status)
+  if (conf.debug)console.log('pinger: ' + server.pinger.status)
   if (server.checker.notification.status !== server.pinger.status) {
-    console.log('values dont match')
+    if (conf.debug)  console.log('values dont match')
     //email
     if (server.config.notifications.email.enabled) {
-      console.log('email enabled')
+      if (conf.debug) console.log('email enabled')
       if (server.pinger.status == 'online' && server.config.notifications.email.for.online) {
         email.notification(server)
       }
@@ -28,7 +29,7 @@ module.exports = async (status, server) => {
     }
     //webhook
     if (server.config.notifications.webhook.enabled) {
-      console.log('webhook enabled')
+      if (conf.debug) console.log('webhook enabled')
       if (server.pinger.status == 'online' && server.config.notifications.webhook.for.online) {
         axios.post(server.config.notifications.webhook.url, { content: server.config.notifications.webhook.content.replaceAll('[status]', status).replaceAll('[ip]', server.IP) })
       }

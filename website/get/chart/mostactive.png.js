@@ -31,10 +31,10 @@ module.exports = {
         return res.status(200).send(await translate(server.lan, 'This server has logging set to off. please ask an admin to do `/log value: on`'))
       }
       // Get the logs
-      const logsraw = await cache.lookup('Log', server._id)
-      const logs = logsraw.logs
+      const logsraw = await cache.lookup('Log', server._id);
+      const logs = logsraw.logs;
       // Check if logs exist
-      if (logs.length <= 1 || logs == null || !server.IP) {
+      if (logsraw.logs.length <= 1 || logsraw == null || !server.IP) {
         return res.status(200).send(await translate(server.lan, "This server doesn't have any logs, please wait for them to update!"))
       }
 
