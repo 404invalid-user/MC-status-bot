@@ -32,6 +32,7 @@ module.exports = {
     }
     // Get the logs
     const logsraw = await lookup('Log', interaction.guild.id)
+    if (logsraw == null) return interaction.editReply(await translate(server.lan, "This server doesn't have any logs, please wait for them to update!"))
     const logs = logsraw.logs
     // Check if logs exist
     if (logs.length <= 1 || logs == null || !server.IP) {

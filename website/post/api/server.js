@@ -83,7 +83,7 @@ module.exports = {
       }
       const newConfig = req.body.data.config
       if (server.CategoryId != req.body.data.CategoryId) {
-        if (naa(req.body.data.CategoryId) || req.body.data.CategoryId.split('').length > 18) {
+        if (!isNumeric(req.body.data.CategoryId) || req.body.data.CategoryId.split('').length > 18) {
           addError('new server category id is invalid')
         } else {
           server.CategoryId = req.body.data.CategoryId
@@ -91,7 +91,7 @@ module.exports = {
         }
       }
       if (server.StatusChannId != req.body.data.StatusChannId) {
-        if (naa(req.body.data.StatusChannId) || req.body.data.StatusChannId.split('').length > 18) {
+        if (!isNumeric(req.body.data.StatusChannId) || req.body.data.StatusChannId.split('').length > 18) {
           addError('new server StatusChannel id is invalid')
         } else {
           server.StatusChannId = req.body.data.StatusChannId
@@ -99,7 +99,7 @@ module.exports = {
         }
       }
       if (server.NumberChannId != req.body.data.NumberChannId) {
-        if (naa(req.body.data.NumberChannId) || req.body.data.NumberChannId.split('').length > 18) {
+        if (!isNumeric(req.body.data.NumberChannId) || req.body.data.NumberChannId.split('').length > 18) {
           addError('new server NumberChannel id is invalid')
         } else {
           server.NumberChannId = req.body.data.NumberChannId
@@ -285,4 +285,11 @@ const checklength = (txt, len) => {
   } else {
     return false
   }
+}
+
+
+function isNumeric(str) {
+  if (typeof str != "string") return false // we only process strings!  
+  return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }

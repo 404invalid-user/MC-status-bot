@@ -112,8 +112,18 @@ module.exports = {
       // Remove the channels
       try {
         await interaction.guild.channels.cache.get(server.StatusChannId).delete()
-        await interaction.guild.channels.cache.get(server.NumberChannId).delete()
-        await interaction.guild.channels.cache.get(server.CategoryId).delete()
+        const statsChann = await interaction.guild.channels.cache.get(server.StatusChannId)
+        if (statsChann != undefined) {
+         await statsChann.delete();
+        }
+        const NumberChann = await interaction.guild.channels.cache.get(server.StatusChannId)
+        if (NumberChann != undefined) {
+          await NumberChann.delete();
+        }
+        const Category = await interaction.guild.channels.cache.get(server.StatusChannId)
+        if (Category != undefined) {
+         await Category.delete();
+        }
       } catch (err) {
         console.error(err)
       }
