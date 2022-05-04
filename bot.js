@@ -1,14 +1,13 @@
-const { Client, Intents, Collection } = require('discord.js')
-const { RateLimiter } = require('discord.js-rate-limiter')
-const fs = require('fs')
-const mongoose = require('mongoose')
-require('dotenv').config()
-
-const logger = require('./modules/nodeLogger.js')
-
-const Log = require('./database/logSchema')
-const Server = require('./database/ServerSchema')
-const Redis = require('ioredis')
+require('dotenv').config();
+const fs = require('fs');
+const Redis = require('ioredis');
+const mongoose = require('mongoose');
+const Log = require('./database/logSchema');
+const discordModals = require('discord-modals');
+const Server = require('./database/ServerSchema');
+const logger = require('./modules/nodeLogger.js');
+const { RateLimiter } = require('discord.js-rate-limiter');
+const { Client, Intents, Collection } = require('discord.js');
 
 // Handle and log and crashes
 process.on('uncaughtException', async (error, source) => {
@@ -20,17 +19,15 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 client.rateLimiter = new RateLimiter(1, 2000) // Rate limit to one message every two seconds;
 client.commands = new Collection()
 client.slashCommands = new Collection()
+discordModals(client); // discord-modals needs your client in order to interact with modals
 
 logger.success('Starting the bot!')
 
 // Connect to database
-mongoose
-  .connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
+mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
     logger.info('Connected to database!')
     client.login(process.env.TOKEN)
-  })
-  .catch((err) => logger.error(err.stack || err))
+  }).catch((err) => logger.error(err.stack || err))
 
 const redisDetails = process.env.REDIS.split(':')
 const redisclient = new Redis({
@@ -40,29 +37,21 @@ const redisclient = new Redis({
 })
 
 // Make the redis client global
-global.redisclient = redisclient
-
-// Command handling
-const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'))
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`)
-  client.commands.set(command.name, command)
-}
-
+global.redisclient = redisclient;
 // slash Command handling
 const slashCommandFiles = fs.readdirSync('./slashcommands').filter((file) => file.endsWith('.js'))
 for (const file of slashCommandFiles) {
-  const command = require(`./slashcommands/${file}`)
-  client.slashCommands.set(command.name, command)
+  const command = require(`./slashcommands/${file}`);
+  client.slashCommands.set(command.name, command);
 }
 
 // Event handling
-const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'))
+const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'));
 for (const file of eventFiles) {
-  const event = require(`./events/${file}`)
+  const event = require(`./events/${file}`);
   if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args, client))
+    client.once(event.name, (...args) => event.execute(...args, client));
   } else {
-    client.on(event.name, (...args) => event.execute(...args, client))
+    client.on(event.name, (...args) => event.execute(...args, client));
   }
 }

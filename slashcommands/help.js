@@ -2,8 +2,8 @@ const Discord = require('discord.js')
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const translate = require('../modules/translate')
 module.exports = {
-  name: 'help',
-  data: new SlashCommandBuilder().setName('help').setDescription('shows a message to help you use the bot'),
+  name: 'botstats',
+  data: new SlashCommandBuilder().setName('botstats').setDescription('get info on the bot'),
   async execute(interaction, server) {
     const description = `${await translate(
       server.lan,
@@ -20,7 +20,7 @@ module.exports = {
 \`/chart \` - ${await translate(server.lan, 'make a chart with the logged info.')}
 \`/bug\` - ${await translate(server.lan, 'Report a bug in the bot.')}
 
-[${await translate(server.lan, 'Dashboard')}](https://www.mcstatusbot.site/dashboard) | [${translate(
+[${translate(server.lan, 'Snakecraft Hosting ')}](https://discord.gg/YzX5KdF4kq) | [${await translate(server.lan, 'Dashboard')}](https://www.mcstatusbot.site/dashboard) | [${translate(
       server.lan,
       'Invite Bot'
     )}](https://discord.com/oauth2/authorize?client_id=816747912888975362&scope=bot&permissions=268749904) | [${translate(

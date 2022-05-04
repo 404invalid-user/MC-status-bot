@@ -1,7 +1,9 @@
 const fs = require('fs')
 const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord-api-types/v9')
-const logger = require('../modules/nodeLogger.js')
+const logger = require('../modules/nodeLogger.js');
+
+const setBotInfo = require('../modules/nodeLogger')
 module.exports = {
   name: 'ready',
   async execute(client) {

@@ -11,7 +11,6 @@ module.exports = (webServer, shards) => {
         try {
           if (!getReqFile.dynamic) {
             webServer.get(getReqFile.path, async (...args) => getReqFile.run(shards, ...args))
-            console.log('get: ' + getReqFile.path)
           }
         } catch (error) {
           logger.error('executing. path: ' + `./get/${dir}/${file}`)

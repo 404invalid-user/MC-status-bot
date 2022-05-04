@@ -5,9 +5,9 @@
 
 const cache = require('./cache')
 
-module.exports = async (lan, text) => {
-  if (!lan || lan == null || lan == false || lan == undefined) return text
-  const yehe = await cache.lookup('lan', lan)
-  if (yehe == null) return text
-  return yehe[text]
-}
+module.exports = async(lan, text) => {
+    if (!lan || lan == null || lan == false || lan == undefined) return text;
+    const yehe = await cache.lookup('lan', lan);
+    if (yehe == null) return text;
+    return yehe[text];
+};

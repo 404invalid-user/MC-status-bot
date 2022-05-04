@@ -7,7 +7,6 @@ module.exports = (webServer, shards) => {
       let postReqFile = require(__dirname + `/../post/${dir}/${file}`)
       if (postReqFile.path) {
         webServer.post(postReqFile.path, async (...args) => postReqFile.run(shards, ...args))
-        console.log(postReqFile.path)
       } else {
         logger.error('post file dosnt contain a name or description. path: ' + `/${dir}/${file}`)
         continue

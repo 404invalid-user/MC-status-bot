@@ -27,6 +27,7 @@ module.exports = {
         .addChoice('NW', 'NW')
     ),
   async execute(interaction, server, client) {
+    return interaction.reply("still in dev check on the progress in out discord server");
     const world = 'world'
     const x = interaction.options.getString('x')
     const y = '0' //just use 0 blue map will do the rest for us
