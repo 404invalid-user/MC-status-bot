@@ -5,8 +5,8 @@ const logger = require('../modules/nodeLogger.js')
 module.exports = {
   async execute(result, server) {
     // Check if server has more than 288 logs
-    const logsraw = await lookup('Log', server._id);
-    if (logsraw == null) return;
+    const logsraw = await lookup('Log', server._id)
+    if (logsraw == null) return
     //delete after 24 hours
     if (logsraw.logs.length >= 289) {
       logsraw.logs = []

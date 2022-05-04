@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
-const action = new Schema({
+const action = new Schema(
+  {
     _id: { type: String, required: true },
     date: { type: String, required: true, default: Date.now().toString() },
     user: { type: String, required: false },
@@ -7,5 +8,7 @@ const action = new Schema({
     type: { type: String, required: false },
     error: { type: Boolean, required: false },
     actions: { type: Array, required: false, default: [] }
-}, { versionKey: false })
+  },
+  { versionKey: false }
+)
 module.exports = model('auditlog', action)
