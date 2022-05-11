@@ -52,6 +52,7 @@
         "nodemailer": "^6.7.2",
         "puppeteer": "^13.5.1",
         "randomstring": "^1.2.2",
+        "shortid": "^2.2.16",
         "topgg-autoposter": "^2.0.1",
         "uniqid": "^5.4.0"
     },

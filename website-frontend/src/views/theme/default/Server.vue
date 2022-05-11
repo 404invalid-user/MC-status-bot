@@ -57,17 +57,21 @@ export default {
     },
     save() {
       axios
-        .post('/api/server', { data: this.server })
+        .post('/api/server', {
+          data: this.server
+        })
         .then((r) => {
           if (r.data.message == '200400: success with errors') {
-            this.sendMessage('server saved with errors id: ' + r.data.errorid)
-          }
+            this.sendMessage('server settings saved with errors check logs');
+          } else {
+                this.sendMessage('server settings saved');
+          };
         })
         .catch(({ response }) => {
           if (response.status == 400) {
-            return this.sendErrorMessage('Error: saving server, ' + response.data.error + '\nReport ID: ' + response.data.errorid)
-          }
-          this.sendErrorMessage('Error: there was an error saving the server\nReport ID: ' + response.data.errorid)
+            return this.sendErrorMessage('Error: there was an error saving the server settings');
+          };
+          this.sendErrorMessage('Error: there was an error saving the server settings');
         })
     },
     saveProfile() {

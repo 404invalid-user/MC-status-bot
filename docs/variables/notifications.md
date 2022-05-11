@@ -4,3 +4,5 @@
 
 - [status] - your minecraft servers current status (online/offline).
 - [ip] - your minecraft servers ip.
+- [name] - your discord server name.
+- [motd] - your mc servers motd in text format.

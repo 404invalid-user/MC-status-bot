@@ -27,7 +27,7 @@ export default {
   },
   methods: {},
   props: {
-    bot: Object
+    bot: Object,
   },
   async beforeMount() {
     //get user
