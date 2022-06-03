@@ -1,14 +1,13 @@
 //global vars i use
 
-
 //list of all .somthings on domains updated every restart
-let TLDList = [];
+let TLDList = []
 
 module.exports = {
-    getTLDList() {
-        return TLDList;
-    },
-    setTLDList(arr) {
-        TLDList = arr;
-    }
+  getTLDList() {
+    return TLDList
+  },
+  setTLDList(arr) {
+    TLDList = arr
+  }
 }

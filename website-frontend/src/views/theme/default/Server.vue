@@ -62,16 +62,16 @@ export default {
         })
         .then((r) => {
           if (r.data.message == '200400: success with errors') {
-            this.sendMessage('server settings saved with errors check logs');
+            this.sendMessage('server settings saved with errors check logs')
           } else {
-                this.sendMessage('server settings saved');
-          };
+            this.sendMessage('server settings saved')
+          }
         })
         .catch(({ response }) => {
           if (response.status == 400) {
-            return this.sendErrorMessage('Error: there was an error saving the server settings');
-          };
-          this.sendErrorMessage('Error: there was an error saving the server settings');
+            return this.sendErrorMessage('Error: there was an error saving the server settings')
+          }
+          this.sendErrorMessage('Error: there was an error saving the server settings')
         })
     },
     saveProfile() {
