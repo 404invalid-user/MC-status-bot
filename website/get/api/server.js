@@ -1,26 +1,25 @@
-const cache = require('../../../modules/cache')
-const logger = require('../../../modules/nodeLogger')
+const cache = require('../../../modules/cache');
+const logger = require('../../../modules/nodeLogger');
 module.exports = {
-  path: '/api/server',
-  async run(shards, req, res) {
-    try {
-      if (req.user == null) return res.status(401).json({ message: '401: login', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      if (!req.query.id || req.query.id == 'undefined')
-        return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      const server = await cache.lookup('server', req.query.id)
-      if (server == null) return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      let canAccessServer = false
-      for (const g of req.user.guilds) {
-        if (g._id == server._id) {
-          canAccessServer = true
+    path: '/api/server',
+    async run(shards, req, res) {
+        try {
+            if (req.user == null) return res.status(401).json({ message: '401: login', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' });
+            if (!req.query.id || req.query.id == 'undefined') return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' });
+            const server = await cache.lookup('server', req.query.id);
+            if (server == null) return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' });
+            let canAccessServer = false;
+            for (const g of req.user.guilds) {
+                if (g._id == server._id) {
+                    canAccessServer = true;
+                }
+            }
+            if (req.user.admin) canAccessServer = true;
+            if (!canAccessServer) return res.status(403).json({ message: '403: Forbidden you can not access this', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' });
+            return res.status(200).json({ message: '200: success', data: server, responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' });
+        } catch (err) {
+            logger.error(err.stack || err);
+            return res.status(500).json({ message: '500: unknown error please report this', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' });
         }
-      }
-      if (req.user.admin) canAccessServer = true
-      if (!canAccessServer) return res.status(403).json({ message: '403: Forbidden you can not access this', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      return res.status(200).json({ message: '200: success', data: server, responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-    } catch (err) {
-      logger.error(err.stack || err)
-      return res.status(500).json({ message: '500: unknown error please report this', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
     }
-  }
 }
