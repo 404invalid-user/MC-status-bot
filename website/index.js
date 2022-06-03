@@ -4,24 +4,6 @@ const analytics = require('../modules/webanalytics')
 
 module.exports = (webServer, shards) => {
   const cache = require('../modules/cache')
-  webServer.use(express.json())
-  webServer.use(express.urlencoded({ extended: true }))
-  webServer.use(express.static(__dirname + '/dist'))
-  webServer.use(analytics())
-  webServer.use((req, res, next) => {
-    const {
-      headers: { cookie }
-    } = req
-    if (cookie) {
-      const values = cookie.split(';').reduce((res, item) => {
-        const data = item.trim().split('=')
-        return { ...res, [data[0]]: data[1] }
-      }, {})
-      req.cookies = values
-    } else req.cookies = {}
-    next()
-  })
-
   webServer.use(async (req, res, next) => {
     req.user = null
     if (!req.cookies.id || !req.cookies.token) return next()
