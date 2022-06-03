@@ -24,7 +24,7 @@ module.exports = (webServer, shards) => {
     })
 
     webServer.get('/server/:serverid', async(req, res) => {
-        const s = await cache.lookup('Server', req.params.serverid)
+        const s = await cache.lookup('server', req.params.serverid)
         if (s == null) return res.status(404).sendFile(path.join(__dirname, '/../dist/404.html'));
         return res.status(200).sendFile(path.join(__dirname, '/../dist/index.html'));
     })

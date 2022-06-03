@@ -14,7 +14,7 @@ module.exports = {
       }
       if (!req.query.id || req.query.id == 'undefined')
         return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      const server = await cache.lookup('Server', req.query.id)
+      const server = await cache.lookup('server', req.query.id)
       if (server == null) return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
 
       let canAccessServer = false
@@ -31,7 +31,7 @@ module.exports = {
         return res.status(200).send(await translate(server.lan, 'This server has logging set to off. please ask an admin to do `/log value: on`'))
       }
       // Get the logs
-      const logsraw = await cache.lookup('Log', server._id)
+      const logsraw = await cache.lookup('log', server._id)
       const logs = logsraw.logs
       // Check if logs exist
       if (logsraw.logs.length <= 1 || logsraw == null || !server.IP) {

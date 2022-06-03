@@ -15,7 +15,7 @@ module.exports = {
     }
 
     // Get the db entry for
-    const result = await lookup('Server', interaction.guild.id)
+    const result = await lookup('server', interaction.guild.id)
 
     // server didn't define a ip or id of all the channels
     if (!result.StatusChannId || !result.NumberChannId || !result.CategoryId) {

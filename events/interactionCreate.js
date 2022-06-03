@@ -8,7 +8,7 @@ module.exports = {
         const limited = client.rateLimiter.take(interaction.member.id);
         if (limited) return;
         //get server
-        const server = await lookup('Server', interaction.guild.id);
+        const server = await lookup('server', interaction.guild.id);
         if (server == null) return;
         if (!client.slashCommands.has(interaction.commandName)) return;
         const command = client.slashCommands.get(interaction.commandName);

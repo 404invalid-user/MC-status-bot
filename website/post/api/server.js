@@ -15,7 +15,7 @@ module.exports = {
     async run(shards, req, res) {
         try {
             if (req.user == null) return res.status(401).json({ message: '401: incorrect details please login again', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' });
-            const server = await cache.lookup('Server', req.body.data._id);
+            const server = await cache.lookup('server', req.body.data._id);
             if (server == null) return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' });
             let serverAccess = false;
             if (req.user.guilds.filter(g => g._id == server._id && g.manage == true).length == 1) serverAccess = true;
@@ -48,17 +48,17 @@ module.exports = {
             if (req.body.data.Logging != server.Logging) {
                 auditlog(server._id, req.user._id, false, "updated logging to: " + req.body.data.Logging);
                 if (req.body.data.Logging) {
-                    let logs = await cache.lookup('Log', interaction.guild.id);
+                    let logs = await cache.lookup('log', interaction.guild.id);
                     if (logs == null) {
                         await Log.create({ _id: server._id });
-                        logs = await cache.lookup('Log', interaction.guild.id);
+                        logs = await cache.lookup('log', interaction.guild.id);
                     };
                     server.Logging = true;
                     logs.logs = [];
                     logs.save();
                 } else if (!req.body.data.Logging) {
                     server.Logging = false;
-                    await cache.removeCache('Log', server._id);
+                    await cache.removeCache('log', server._id);
                     Log.findOne({ _id: interaction.guild.id }).remove().catch((err) => logger.error(err));
                 }
             }

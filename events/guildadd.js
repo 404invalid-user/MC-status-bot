@@ -74,6 +74,6 @@ module.exports = {
         const g = await Server.findOne({ _id: guild }).catch((err) => logger.error(err.stack || err));
         logger.info('Added the server db entry.')
         if (g == null) return console.log("bruh wty");
-        cache.create('Server', g._id, g)
+        cache.create('server', g._id, g)
     }
 }

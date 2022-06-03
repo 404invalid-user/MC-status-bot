@@ -28,7 +28,7 @@ module.exports = async () => {
 
     await LogSchema.find()
       .then((result) => {
-        result.forEach((log) => redisclient.hset('Log', log._id, JSON.stringify(log)))
+        result.forEach((log) => redisclient.hset('log', log._id, JSON.stringify(log)))
         logger.info('Cached logs')
       })
       .catch((err) => logger.error(err.stack || err))
@@ -100,7 +100,7 @@ module.exports = async () => {
             }
           }
           await server.save()
-          redisclient.hset('Server', server._id, JSON.stringify(server))
+          redisclient.hset('server', server._id, JSON.stringify(server))
         })
         logger.info('Cached servers')
       })

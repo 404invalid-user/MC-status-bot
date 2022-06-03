@@ -24,18 +24,18 @@ module.exports = {
 
     if (args == 'on') {
       replyContent = `${await translate(server.lan, 'Logging has been turned')} ${await translate(server.lan, 'on')}`
-      let logs = await cache.lookup('Log', interaction.guild.id)
+      let logs = await cache.lookup('log', interaction.guild.id)
       server.Logging = true
       if (logs == null) {
         await LogSchema.create({ _id: server._id })
-        logs = await cache.lookup('Log', interaction.guild.id)
+        logs = await cache.lookup('log', interaction.guild.id)
       }
       logs.logs = []
       logs.save()
     } else if (args == 'off') {
       replyContent = `${await translate(server.lan, 'Logging has been turned')} ${await translate(server.lan, 'off')}`
       server.Logging = false
-      await cache.removeCache('Log', server._id)
+      await cache.removeCache('log', server._id)
       Log.deleteOne({ _id: interaction.guild.id }).catch((err) => logger.error(err))
     }
     server.save()

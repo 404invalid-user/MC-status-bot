@@ -7,6 +7,7 @@ const setBotInfo = require('../modules/nodeLogger')
 module.exports = {
   name: 'ready',
   async execute(client) {
+    console.log("Ready!");
     logger.success('The bot is up and running!')
     // Update activity every hour so that it doesn't expire
     client.user.setActivity('for /help | hosted by http://schost.us', { type: 'WATCHING' })

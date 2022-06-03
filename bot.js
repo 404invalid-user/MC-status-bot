@@ -6,7 +6,6 @@ const discordModals = require('discord-modals');
 const logger = require('./modules/nodeLogger.js');
 const { RateLimiter } = require('discord.js-rate-limiter');
 const { Client, Intents, Collection } = require('discord.js');
-console.debug = require('./modules/console.debug.js');
 
 // Handle and log and crashes
 process.on('uncaughtException', async(error, source) => {

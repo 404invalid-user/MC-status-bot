@@ -17,7 +17,7 @@ const exec = mongoose.Query.prototype.exec
 // if the key is not in redis it fallbacks to mongo
 module.exports = {
   async lookup(collection, key) {
-    // collection can be 'Server' or 'Log'
+    // collection can be 'server' or 'log'
     const cacheValue = await client.hget(collection, key)
     var result = null
 
@@ -28,12 +28,12 @@ module.exports = {
     // Mongo fallback
     else {
       logger.info(`${key} just fellback to mongo while looking for the ${collection} collection!`)
-      if (collection == 'Log') {
+      if (collection == 'log') {
         result = await Log.findOne({ _id: key })
         if (result != null) {
           client.hset(collection, key, JSON.stringify(result))
         }
-      } else if (collection == 'Server') {
+      } else if (collection == 'server') {
         result = await Server.findOne({ _id: key })
         //make doc if it does not exist in mongodb
         if (result == null) {
@@ -54,9 +54,9 @@ module.exports = {
     if (result !== null) {
       result['save'] = async function () {
         var mdbupdate
-        if (collection == 'Server') {
+        if (collection == 'server') {
           mdbupdate = await Server.findOne({ _id: key })
-        } else if (collection == 'Log') {
+        } else if (collection == 'log') {
           mdbupdate = await Log.findOne({ _id: key })
         } else if (collection == 'user') {
           mdbupdate = await User.findOne({ _id: key })
@@ -86,7 +86,7 @@ module.exports = {
   },
 
   // Remove document from redis
-  // collection has to be 'Server' or 'Log'
+  // collection has to be 'server' or 'log'
   removeCache(collection, key) {
     client.hdel(collection, key)
   },
@@ -118,13 +118,13 @@ mongoose.Query.prototype.cache = async function () {
   if (this.mongooseCollection.name == 'logs') {
     // Pass a empty array if the result is undefined
     if (!result) {
-      await client.hset('Log', key, '[]')
+      await client.hset('log', key, '[]')
     } else {
-      await client.hset('Log', key, JSON.stringify(result.logs))
+      await client.hset('log', key, JSON.stringify(result.logs))
     }
     return
   } else if (this.mongooseCollection.name == 'servers') {
-    await client.hset('Server', key, JSON.stringify(result))
+    await client.hset('server', key, JSON.stringify(result))
     return
   } else {
     logger.error(`${this.mongooseCollection.name} is not a valid collection name!`)

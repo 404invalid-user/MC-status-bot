@@ -17,7 +17,6 @@ module.exports = {
         .addStringOption((option) => option.setName('type').setDescription('The server type').setRequired(false).addChoice('java', 'java').addChoice('bedrock', 'bedrock'))
         .addStringOption((option) => option.setName('show-members').setDescription('show members in channel status').setRequired(false).addChoice('no', 'no').addChoice('yes', 'yes')),
     async execute(interaction, server, client) {
-        console.debug("running setup")
         await interaction.deferReply();
         // Check if the person is admin
         if (!interaction.member.permissions.has('MANAGE_GUILD') && interaction.member.id != process.env.OWNERID) return interaction.editReply('You need the `MANAGE_GUILD` permission to use this command!');
@@ -52,22 +51,19 @@ module.exports = {
         }
 
         server.IP = ip;
-        console.debug("ip setup");
         server.Bedrock = interaction.options.getString('type') == 'bedrock' ? true : false;
         server.MemberChannEnabled = interaction.options.getString('show-members') == 'yes' ? true : false;
 
         //reset logs if any
-        const logs = await cache.lookup('Log', server._id);
+        const logs = await cache.lookup('log', server._id);
         if (logs !== null) {
             logs.logs = [];
             logs.save();
         }
         await server.save();
-        console.debug("server saved");
 
 
         async function servonline(pingServer) {
-            console.debug("server online");
             let translation;
             let error = false;
 
@@ -78,27 +74,22 @@ module.exports = {
 
             //const statusChannel = await client.shard.broadcastEval(getChannel, { context: { guild: server._id, channel: server.StatusChannId }, });;
             //const MemberChannel = await client.shard.broadcastEval(getChannel, { context: { guild: server._id, channel: server.NumberChannId }, });
-            //console.debug(JSON.stringify(statusChannel))
+           
             const statusChannel = await client.channels.fetch(server.StatusChannId);
             const MemberChannel = await client.channels.fetch(server.NumberChannId);
             if (statusChannel == undefined) {
                 error = true;
-                console.debug("status channel undefined");
             } else {
                 translation = await translate(server.lan, 'ONLINE');
                 statusChannel.setName(`🟢 ${translation}`);
-                console.debug("status channel update name");
             };
             if (MemberChannel == undefined) {
                 error = true;
-                console.debug("member channel undefined");
             } else {
                 translation = await translate(server.lan, 'Players Online');
                 if (server.MemberChannEnabled) {
                     await MemberChannel.setName(`👥 ${translation}: ${pingServer.online}`);
-                    console.debug("member channel emabled");
                 } else {
-                    console.debug("member channel disabled");
                     await MemberChannel.setName(`👥 ${translation}: -`);
                 }
             }
@@ -136,14 +127,11 @@ module.exports = {
 
         const pingServer = await serverStats(server);
 
-        console.debug(JSON.stringify(pingServer));
 
         let error = false;
         if (pingServer.status == "offline") {
-            console.debug("offline")
             error = await servoffline();
         } else if (pingServer.status == "online") {
-            console.debug("online")
             error = await servonline(pingServer);
         }
 

@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { info } = require('../modules/nodeLogger.js')
+const logger = require('../modules/nodeLogger.js')
 const { AutoPoster } = require('topgg-autoposter')
 module.exports = (shards) => {
   if (process.env.TOPGGAPI) {
@@ -7,6 +7,6 @@ module.exports = (shards) => {
       info('Posted stats to Top.gg!')
     })
   } else {
-    info("No topgg token was provided - stats won't be posted to top.gg!")
+    logger.info("No topgg token was provided - stats won't be posted to top.gg!")
   }
 }

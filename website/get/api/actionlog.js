@@ -8,7 +8,7 @@ module.exports = {
       if (req.user == null) return res.status(401).json({ message: '401: login', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
       if (!req.query.id || req.query.id == 'undefined')
         return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      const server = await cache.lookup('Server', req.query.id)
+      const server = await cache.lookup('server', req.query.id)
       if (server == null) return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
       let canAccessServer = false
       for (const g of req.user.guilds) {

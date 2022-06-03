@@ -1,4 +1,3 @@
-require('dotenv').config();
 const nodemailer = require('nodemailer');
 const logger = require('./nodeLogger');
 const auditlog = require('./auditlog');

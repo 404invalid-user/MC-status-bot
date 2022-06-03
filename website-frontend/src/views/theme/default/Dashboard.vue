@@ -49,8 +49,8 @@ export default {
   },
   created() {
     for (let server of this.me.guilds) {
-      if (!server.pinger) {
-        server.pinger = {
+      if (!server.ping) {
+        server.ping = {
           maxMembers: '0',
           members: '0',
           status: 'offline'
@@ -234,9 +234,9 @@ img.ping {
           </div>
           <div class="info">
             <div class="signal-top">
-              <span class="online">{{ server.pinger.members }}</span
-              ><span class="slash">/</span><span class="max">{{ server.pinger.maxMembers }}</span
-              ><img :src="server.pinger.status == 'online' ? '/img/signal.png' : '/img/no-signal.png'" class="ping" />
+              <span class="online">{{ server.ping.members }}</span
+              ><span class="slash">/</span><span class="max">{{ server.ping.maxMembers }}</span
+              ><img :src="server.ping.status == 'online' ? '/img/signal.png' : '/img/no-signal.png'" class="ping" />
             </div>
           </div>
         </div>

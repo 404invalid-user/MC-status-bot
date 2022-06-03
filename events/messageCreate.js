@@ -9,11 +9,11 @@ module.exports = {
     if (limited) return
 
     //get server
-    let server = await lookup('Server', message.guild.id)
+    let server = await lookup('server', message.guild.id)
     //add server to db and cache if it doesnt exist
     if (server == null) {
       await require('./guildadd').addGuild(message.guild.id)
-      server = await lookup('Server', message.guild.id)
+      server = await lookup('server', message.guild.id)
     }
     //update channel status if it has changed
     channelUpdater(client, server)

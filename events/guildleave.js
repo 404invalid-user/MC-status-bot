@@ -11,7 +11,7 @@ module.exports = {
       _id: guild.id
     })
       .then(() => {
-        removeCache('Server', guild.id)
+        removeCache('server', guild.id)
         logger.info('Deleted the server db entry.')
       })
       .catch((err) => logger.error(err.stack || err))
@@ -20,7 +20,7 @@ module.exports = {
       _id: guild.id
     })
       .then(() => {
-        removeCache('Log', guild.id)
+        removeCache('log', guild.id)
         logger.info('Deleted the log db entry.')
       })
       .catch((err) => logger.error(err.stack || err))

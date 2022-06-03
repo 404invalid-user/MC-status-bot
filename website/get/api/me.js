@@ -11,7 +11,7 @@ module.exports = {
       user.save = undefined
       for (const g of req.user.guilds) {
         if (g.mutual && g.manage) {
-          const guild = await cache.lookup('Server', g._id).catch((e) => {})
+          const guild = await cache.lookup('server', g._id).catch((e) => {})
           if (guild !== null) {
             user.guilds.push(guild)
           }
