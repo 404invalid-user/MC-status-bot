@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model } = require('mongoose');
 
 const serverSchema = new Schema({
     _id: { type: String, required: true },
@@ -12,7 +12,7 @@ const serverSchema = new Schema({
     StatusChannId: { type: String, required: false },
     NumberChannId: { type: String, required: false },
     MemberChannEnabled: { type: Boolean, required: false },
-    pinger: {
+    ping: {
         status: { type: String, required: false },
         motd: { type: Object, required: false },
         members: { type: String, required: false },
@@ -83,4 +83,4 @@ const serverSchema = new Schema({
     }
 }, { versionKey: false })
 
-module.exports = model('Server', serverSchema)
+module.exports = model('server', serverSchema);

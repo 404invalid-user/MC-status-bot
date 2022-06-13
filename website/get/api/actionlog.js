@@ -8,7 +8,7 @@ module.exports = {
       if (req.user == null) return res.status(401).json({ message: '401: login', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
       if (!req.query.id || req.query.id == 'undefined')
         return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      const server = await cache.lookup('Server', req.query.id)
+      const server = await cache.lookup('server', req.query.id)
       if (server == null) return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
       let canAccessServer = false
       for (const g of req.user.guilds) {
@@ -18,7 +18,6 @@ module.exports = {
       }
       if (req.user.admin) canAccessServer = true
       if (!canAccessServer) return res.status(403).json({ message: '403: Forbidden you can not access this', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-
       const myServerActions = actionlog.find({ guild: server.id })
       return res.status(200).json({ message: '200: success', data: myServerActions, responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
     } catch (err) {

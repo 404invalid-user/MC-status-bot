@@ -1,36 +1,29 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const { Schema, model } = require('mongoose');
 
-const logSchema = new Schema(
-  {
+const logSchema = new Schema({
     _id: {
-      type: String,
-      required: true
+        type: String,
+        required: true
     },
-    logs: [
-      {
+    logs: [{
         timestamp: {
-          type: Date,
-          default: Date.now
+            type: Date,
+            default: Date.now
         },
         online: {
-          required: true,
-          type: Boolean
+            required: true,
+            type: Boolean
         },
         playersOnline: {
-          type: Number
+            type: Number
         },
         playerNamesOnline: {
-          type: String
+            type: String
         }
-      }
-    ]
-  },
-  {
+    }]
+}, {
     versionKey: false,
     _id: false
-  }
-)
+})
 
-const Log = mongoose.model('Log', logSchema)
-module.exports = Log
+module.exports = model('log', logSchema);

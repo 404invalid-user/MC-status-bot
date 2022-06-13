@@ -1,6 +1,6 @@
 const axios = require('axios');
-const sendEmail = require('./sendemail');
 const auditlog = require('./auditlog');
+const sendEmail = require('./sendemail');
 
 module.exports = async(server) => {
     if (!server.config.notifications) return;
@@ -24,7 +24,13 @@ module.exports = async(server) => {
         }
     }
     if (server.checker.notification.status !== server.pinger.status) {
-        if (server.config.notifications.webhook.enabled && server.config.notifications.webhook.url != undefined && server.config.notifications.webhook.url != "" && server.config.notifications.webhook.url != " " && server.config.notifications.webhook.url.includes("http")) {
+        if (
+            server.config.notifications.webhook.enabled &&
+            server.config.notifications.webhook.url != undefined &&
+            server.config.notifications.webhook.url != '' &&
+            server.config.notifications.webhook.url != ' ' &&
+            server.config.notifications.webhook.url.includes('http')
+        ) {
             webhook(server, server.config.notifications.webhook, server.pinger);
         }
 
@@ -38,23 +44,21 @@ module.exports = async(server) => {
     }
 }
 
-
-
 function webhook(server, config, pinger) {
-    if (pinger.status == 'online' && config.for.online || server.pinger.status == 'offline' && config.for.offline) {;
+    if ((pinger.status == 'online' && config.for.online) || (server.pinger.status == 'offline' && config.for.offline)) {
         axios.post(config.url, {
             content: server.config.notifications.webhook.content.replaceAll('[status]', server.pinger.status).replaceAll('[ip]', server.IP).replaceAll('[name]', server.name).replaceAll('[motd]', server.pinger.motd.clean)
         }).then((res) => {
-            auditlog(server._id, null, false, "send webhook notification");
+            auditlog(server._id, null, false, 'send webhook notification');
         }).catch((err) => {
-            auditlog(server._id, null, true, "failed to send webhook notification");
+            auditlog(server._id, null, true, 'failed to send webhook notification with ' + err.toString());
             //not going to logger this as its probbably just incorrect url
         });
     }
 }
 
 function email(server, config, pinger) {
-    if (pinger.status == 'online' && config.for.online || server.pinger.status == 'offline' && config.for.offline) {
+    if ((pinger.status == 'online' && config.for.online) || (server.pinger.status == 'offline' && config.for.offline)) {
         for (const email of config.emails) {
             const subject = server.config.notifications.email.subject.replaceAll('[status]', server.pinger.status).replaceAll('[ip]', server.IP).replaceAll('[name]', server.name).replaceAll('[motd]', server.pinger.motd.clean);
             const body = server.config.notifications.email.content.replaceAll('[status]', server.pinger.status).replaceAll('[ip]', server.IP).replaceAll('[name]', server.name).replaceAll('[motd]', server.pinger.motd.clean);

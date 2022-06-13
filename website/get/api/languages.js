@@ -1,4 +1,3 @@
-const path = require('path')
 const cache = require('../../../modules/cache')
 const logger = require('../../../modules/nodeLogger')
 module.exports = {

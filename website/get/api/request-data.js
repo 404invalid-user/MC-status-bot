@@ -5,7 +5,6 @@ module.exports = {
     try {
       if (req.user == null)
         return res.status(401).json({ message: '401: incorrect details please login again', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-
       let currentUser = req.user
       currentUser.accessCodes = []
       for (const c of req.user.accessCodes) {

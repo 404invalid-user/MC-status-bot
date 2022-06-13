@@ -3,7 +3,6 @@ const path = require('path')
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas')
 module.exports = {
   path: '/chart/example.png',
-
   async run(shards, req, res) {
     try {
       // Chart.js

@@ -1,20 +1,17 @@
 const path = require('path')
-const translate = require('../../../modules/translate')
 const moment = require('moment-timezone')
 const cache = require('../../../modules/cache.js')
-
+const translate = require('../../../modules/translate')
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas')
+
 module.exports = {
   path: '/chart/playersonline.png',
-
   async run(shards, req, res) {
     try {
-      if (req.user == null) {
-        return res.status(401).json({ message: '401: login', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      }
+      if (req.user == null) return res.status(401).json({ message: '401: login', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
       if (!req.query.id || req.query.id == 'undefined')
         return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      const server = await cache.lookup('Server', req.query.id)
+      const server = await cache.lookup('server', req.query.id)
       if (server == null) return res.status(404).json({ message: '404: server not found', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
 
       let canAccessServer = false
@@ -27,16 +24,15 @@ module.exports = {
       if (!canAccessServer) return res.status(403).json({ message: '403: Forbidden you can not access this', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
 
       // Get the ip. data.IP holds the ip
-      if (!server.Logging) {
-        return res.status(200).send(await translate(server.lan, 'This server has logging set to off. please ask an admin to do `/log value: on`'))
-      }
+      if (!server.Logging) return res.status(200).send(await translate(server.lan, 'This server has logging set to off. please ask an admin to do `/log value: on`'))
+
       // Get the logs
-      const logsraw = await cache.lookup('Log', server._id)
+      const logsraw = await cache.lookup('log', server._id)
       const logs = logsraw.logs
       // Check if logs exist
-      if (logsraw.logs.length <= 1 || logsraw == null || !server.IP) {
+      if (logsraw.logs.length <= 1 || logsraw == null || !server.IP)
         return res.status(200).send(await translate(server.lan, "This server doesn't have any logs, please wait for them to update!"))
-      }
+
       let yLabels = []
       let xLabels = []
 

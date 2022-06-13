@@ -5,6 +5,6 @@ const log = new Schema({
     user: { type: String, required: false },
     guild: { type: String, required: false },
     error: { type: Boolean, required: false },
-    action: { type: String, required: false, default: "" }
+    action: { type: String, required: false, default: '' }
 }, { versionKey: false })
 module.exports = model('auditlog', log);

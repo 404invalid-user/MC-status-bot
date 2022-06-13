@@ -1,13 +1,11 @@
-const logger = require('../../../modules/nodeLogger')
 const cache = require('../../../modules/cache')
+const logger = require('../../../modules/nodeLogger')
 module.exports = {
   path: '/api/me',
-
   async run(shards, req, res) {
     try {
-      if (req.user == null) {
+      if (req.user == null)
         return res.status(401).json({ message: '401: incorrect details please login again', responseTime: (Date.now() - parseFloat(req.date)).toString() + 'ms' })
-      }
       if (req.body.data)
         return res
           .status(400)
