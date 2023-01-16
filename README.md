@@ -1,4 +1,4 @@
-:warning: warning: no longer maintined and has many bugs please take a look at v3 here [404invalid-user/MCStatusBot](https://github.com/404invalid-user/MCStatusBot)
+:warning: warning: no longer maintined and has many bugs please take a look at v3 here [org:MCStatusBot](https://github.com/MCStatusBot)
 
 # MC status bot :robot: :chart_with_upwards_trend:
 
