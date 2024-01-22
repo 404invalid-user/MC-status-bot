@@ -50,6 +50,8 @@ Your privacy is very important to us. It is our policy to respect your privacy.
 
 - other personal information stored in our database is linked to a particular Discord uer ID. When you click the "delete account" button on the dashboard, all information stored under the user ID will be permanently deleted.
 
+- alterntively all user and or guild data can be deleted by emailing 404invalid-user@mcstatusbot.site
+
 <br>
 
 2.  **Changes to the policy**
